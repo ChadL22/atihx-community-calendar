@@ -1,0 +1,40 @@
+# Cloudflare Worker configuration for the ATIHx Community Calendar API.
+# See SETUP.md for the step-by-step guide.
+
+name = "atih-community-cal"
+main = "src/index.js"
+compatibility_date = "2025-09-01"
+
+# Serves the review page at /admin from ./public
+[assets]
+directory = "./public"
+
+# The database. Run `npx wrangler d1 create atih-community-cal` once and paste
+# the database_id it prints below.
+[[d1_databases]]
+binding = "DB"
+database_name = "atih-community-cal"
+database_id = "PASTE-YOUR-DATABASE-ID-HERE"
+
+[vars]
+ENVIRONMENT = "production"
+
+# "false" = a community lead approves each event before it goes live.
+# "true"  = events go live as soon as they pass the bot check. Anything that
+#           looks like a duplicate still waits for review either way.
+AUTO_PUBLISH = "false"
+
+# The website(s) allowed to send submissions, comma separated, no trailing slash.
+# Replace with your GitHub Pages address, e.g. "https://chadl22.github.io"
+ALLOWED_ORIGINS = "https://YOUR-USERNAME.github.io,http://localhost:8000"
+
+# From Cloudflare Zero Trust → Access → Applications (see SETUP.md step 6).
+ACCESS_TEAM_DOMAIN = "https://YOUR-TEAM.cloudflareaccess.com"
+ACCESS_AUD = "PASTE-YOUR-ACCESS-AUD-TAG-HERE"
+
+# Secrets: set these with `npx wrangler secret put NAME`, never in this file.
+#   TURNSTILE_SECRET   from Cloudflare Turnstile
+#   IP_HASH_SALT       any long random string
+
+# Local development: `npx wrangler dev` reads .dev.vars, which overrides the
+# values above (see .dev.vars.example).

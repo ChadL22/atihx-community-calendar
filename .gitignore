@@ -1,0 +1,10 @@
+.DS_Store
+__pycache__/
+*.pyc
+
+# backend
+backend/node_modules/
+backend/.wrangler/
+backend/.dev.vars
+backend/seed-moderators.sql
+backend/test/*.sqlite

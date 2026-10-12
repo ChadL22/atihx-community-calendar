@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Review events · ATIHx Community Calendar</title>
+<link rel="icon" type="image/png" href="atihx-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Corben:wght@400;700&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap header-inner">
+    <div class="brand">
+      <img src="atihx-logo.png" alt="ATIHx" class="brand-logo" width="295" height="446">
+      <span class="brand-divider" aria-hidden="true"></span>
+      <span class="brand-name">Event review</span>
+    </div>
+    <div class="who">
+      <span id="who-email"></span>
+      <a class="ulink" href="/cdn-cgi/access/logout">Sign out</a>
+    </div>
+  </div>
+</header>
+
+<main class="wrap main">
+  <div id="loading" class="notice">Loading…</div>
+
+  <div id="denied" class="notice" hidden>
+    <h1>You're signed in, but not on the moderator list yet.</h1>
+    <p>Ask an admin to add <strong id="denied-email"></strong> as a community lead, then reload this page.</p>
+  </div>
+
+  <div id="app" hidden>
+    <section class="intro">
+      <h1 id="greeting">Review submitted events</h1>
+      <p class="lead" id="mode-note"></p>
+    </section>
+
+    <ol class="howto" aria-label="How to review an event">
+      <li><span class="step">1</span><span><strong>Check the details.</strong> Each event shows a checklist. Green ticks mean the detail is there; make sure it looks right.</span></li>
+      <li><span class="step">2</span><span><strong>Fill any gaps.</strong> Use <em>Fix details</em> to correct it yourself, or <em>Ask submitter</em> to email them.</span></li>
+      <li><span class="step">3</span><span><strong>Approve.</strong> It goes on the calendar and into everyone's subscribed calendars.</span></li>
+    </ol>
+
+    <div class="toolbar">
+      <div class="tabs" role="tablist" aria-label="Event status">
+        <button type="button" role="tab" data-status="pending" aria-selected="true">To review <span class="count" id="count-pending">0</span></button>
+        <button type="button" role="tab" data-status="approved" aria-selected="false">Published <span class="count" id="count-approved">0</span></button>
+        <button type="button" role="tab" data-status="rejected" aria-selected="false">Declined <span class="count" id="count-rejected">0</span></button>
+      </div>
+      <div class="community-filter" id="community-filter" role="group" aria-label="Community"></div>
+    </div>
+
+    <div id="flash" class="flash" role="status" aria-live="polite" hidden></div>
+    <div id="list" class="list"></div>
+
+    <section id="admin-tools" class="admin-tools" hidden>
+      <h2>Moderators</h2>
+      <p class="muted">Admins review every community and manage this list. Community leads review only their own city. Use the email each person signs in with.</p>
+      <div id="moderators" class="table"></div>
+      <form id="add-moderator" class="inline-form">
+        <label>Email<input type="email" name="email" required placeholder="name@example.com"></label>
+        <label>Role
+          <select name="role">
+            <option value="lead">Community lead</option>
+            <option value="admin">Admin</option>
+          </select>
+        </label>
+        <label class="community-field">Community<select name="community" id="moderator-community"></select></label>
+        <button class="btn btn-dark" type="submit">Add moderator</button>
+      </form>
+
+      <h2>Add a community</h2>
+      <p class="muted">New communities appear in the site's filter, legend and subscription feeds right away.</p>
+      <form id="add-community" class="inline-form">
+        <label>Short id<input name="id" required pattern="[a-z0-9-]{2,30}" placeholder="boston"></label>
+        <label>Full name<input name="name" required placeholder="Boston/Cambridge, MA"></label>
+        <label>Short name<input name="short" required placeholder="Boston"></label>
+        <label>Color<input name="color" type="color" value="#8a6cff"></label>
+        <label class="wide">Search words<input name="search" placeholder="boston cambridge massachusetts ma"></label>
+        <button class="btn btn-dark" type="submit">Add community</button>
+      </form>
+    </section>
+  </div>
+</main>
+
+<template id="edit-template">
+  <form class="edit-form">
+    <h4>Fix details</h4>
+    <div class="form-grid">
+      <label class="span-2">Event title<input name="title" required maxlength="140"></label>
+      <label>Community<select name="community"></select></label>
+      <label>Date<input name="date" type="date" required></label>
+      <label>Starts<input name="startTime" type="time" required></label>
+      <label>Ends<input name="endTime" type="time" required></label>
+      <label>Venue<input name="venue" maxlength="140" placeholder="e.g. WeWork Center City"></label>
+      <label>Address<input name="address" maxlength="200" placeholder="Street, city"></label>
+      <label class="span-2">Hosted by<input name="host" maxlength="200" placeholder="Hosts, co-hosts and sponsors"></label>
+      <label class="span-2">Description<textarea name="description" rows="4" maxlength="2000"></textarea></label>
+      <label class="span-2">Registration link (optional)<input name="url" type="url" maxlength="500" placeholder="https://lu.ma/…"></label>
+    </div>
+    <p class="form-error" hidden></p>
+    <div class="actions">
+      <button type="submit" class="btn btn-dark btn-small">Save changes</button>
+      <button type="button" class="btn btn-outline btn-small" data-cancel>Cancel</button>
+    </div>
+  </form>
+</template>
+
+<script src="admin.js"></script>
+</body>
+</html>

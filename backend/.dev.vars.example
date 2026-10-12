@@ -1,0 +1,16 @@
+# Copy to .dev.vars for local development with `npx wrangler dev`.
+# .dev.vars is git-ignored; never commit real secrets.
+
+ENVIRONMENT=development
+
+# Pretend to be signed in through Cloudflare Access while developing.
+# Only works when ENVIRONMENT=development.
+DEV_ADMIN_EMAIL=you@example.com
+
+# Leave TURNSTILE_SECRET unset locally to skip the bot check, or use
+# Cloudflare's always-pass test secret:
+# TURNSTILE_SECRET=1x0000000000000000000000000000000AA
+
+ALLOWED_ORIGINS=http://localhost:8000,http://127.0.0.1:8000
+AUTO_PUBLISH=false
+IP_HASH_SALT=local-dev-salt

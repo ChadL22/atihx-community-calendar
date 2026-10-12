@@ -1,0 +1,16 @@
+{
+  "name": "atih-community-cal-api",
+  "private": true,
+  "type": "module",
+  "description": "Cloudflare Worker + D1 backend for the ATIHx Community Calendar",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:init:local": "wrangler d1 execute atih-community-cal --local --file=schema.sql",
+    "db:init": "wrangler d1 execute atih-community-cal --remote --file=schema.sql",
+    "test": "node --experimental-sqlite --no-warnings test/run-tests.mjs"
+  },
+  "devDependencies": {
+    "wrangler": "^3.114.0"
+  }
+}
