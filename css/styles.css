@@ -357,10 +357,24 @@ a.event-title:hover { text-decoration: underline; }
   .brand-logo { height: 56px; }
   .brand-divider { height: 34px; }
   .brand-name { font-size: 20px; }
-  .header-inner { flex-direction: column; align-items: center; gap: 8px; padding-top: 14px; padding-bottom: 10px; }
-  .nav { justify-content: center; gap: 0 22px; font-size: 16px; }
-  .nav > a, .dropdown-toggle { display: inline-flex; align-items: center; padding: 8px 0; line-height: 1.25; font-size: 16px; }
-  .dropdown-menu { right: auto; left: 50%; transform: translateX(-50%); }
+  .header-inner { flex-direction: column; align-items: center; gap: 6px; padding-top: 14px; padding-bottom: 6px; }
+  /* Swipeable menu row: one line, scrolls sideways with a clear start and end. */
+  .nav {
+    flex-wrap: nowrap; justify-content: flex-start; gap: 0 24px;
+    width: calc(100% + 32px); margin: 0 -16px; padding: 0 16px;
+    overflow-x: auto; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity; scroll-padding-inline: 16px;
+    scrollbar-width: none;
+  }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav.can-scroll-right { -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 44px), transparent); mask-image: linear-gradient(to right, #000 calc(100% - 44px), transparent); }
+  .nav.can-scroll-left { -webkit-mask-image: linear-gradient(to right, transparent, #000 44px); mask-image: linear-gradient(to right, transparent, #000 44px); }
+  .nav.can-scroll-left.can-scroll-right { -webkit-mask-image: linear-gradient(to right, transparent, #000 44px, #000 calc(100% - 44px), transparent); mask-image: linear-gradient(to right, transparent, #000 44px, #000 calc(100% - 44px), transparent); }
+  .nav > a, .dropdown-toggle { flex: none; display: inline-flex; align-items: center; padding: 12px 0; line-height: 1.25; font-size: 16px; white-space: nowrap; scroll-snap-align: start; }
+  .dropdown { flex: none; position: static; }
+  /* On phones the Slack list only opens on tap (js/nav.js pins it under the button). */
+  .dropdown:hover .dropdown-menu, .dropdown:focus-within .dropdown-menu { display: none; }
+  .dropdown.is-open .dropdown-menu { display: block; z-index: 50; }
   .main { padding-top: 24px; }
   .intro { gap: 10px; }
   .intro h1 { font-size: 34px; }

@@ -355,8 +355,6 @@
   });
   document.addEventListener('click', function (e) {
     if (state.open && !$('filter').contains(e.target)) { state.open = false; state.query = ''; $('community-search').value = ''; renderFilter(); }
-    var dd = document.querySelector('.dropdown');
-    if (dd && !dd.contains(e.target)) { dd.classList.remove('is-open'); dd.querySelector('.dropdown-toggle').setAttribute('aria-expanded', 'false'); }
   });
 
   $('prev-month').addEventListener('click', function () { goMonth(-1); });
@@ -376,14 +374,7 @@
     if (e.key === 'Escape' && state.subscribeOpen && !state.open) { state.subscribeOpen = false; renderSubscribe(); }
   });
 
-  // Slack menu: opens on hover, focus, or tap.
-  var dropdown = document.querySelector('.dropdown');
-  if (dropdown) {
-    dropdown.querySelector('.dropdown-toggle').addEventListener('click', function () {
-      var open = dropdown.classList.toggle('is-open');
-      this.setAttribute('aria-expanded', String(open));
-    });
-  }
+  // The Slack menu is handled by js/nav.js.
 
   /* ---------- swipe helper ----------
      Calls onNext / onPrev when someone swipes (finger) or drags (mouse)

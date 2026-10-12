@@ -15,17 +15,7 @@
     });
   };
 
-  // Slack menu (same behaviour as the calendar page).
-  var dropdown = document.querySelector('.dropdown');
-  if (dropdown) {
-    var toggle = dropdown.querySelector('.dropdown-toggle');
-    toggle.addEventListener('click', function () {
-      toggle.setAttribute('aria-expanded', String(dropdown.classList.toggle('is-open')));
-    });
-    document.addEventListener('click', function (e) {
-      if (!dropdown.contains(e.target)) { dropdown.classList.remove('is-open'); toggle.setAttribute('aria-expanded', 'false'); }
-    });
-  }
+  // The Slack menu is handled by js/nav.js.
 
   // Earliest allowed date is today.
   var now = new Date();
