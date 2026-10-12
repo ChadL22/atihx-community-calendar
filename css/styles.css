@@ -121,7 +121,7 @@ button:disabled { cursor: default; opacity: 0.35; }
 
 /* ---------- Toolbar: filter + subscribe ---------- */
 .toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
-.toolbar > .btn { margin-left: auto; }
+.toolbar-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-left: auto; }
 .filter { display: flex; align-items: center; gap: 12px; flex: 1 1 380px; max-width: 620px; min-width: 0; }
 .filter-icon {
   display: inline-flex; align-items: center; justify-content: center;
@@ -330,7 +330,8 @@ a.event-title:hover { text-decoration: underline; }
 
 /* ---------- Small screens ---------- */
 @media (max-width: 760px) {
-  .toolbar > .btn { margin-left: 0; width: 100%; }
+  .toolbar-actions { margin-left: 0; width: 100%; }
+  .toolbar-actions .btn { flex: 1 1 200px; }
   .filter { max-width: none; flex-basis: 100%; }
 }
 @media (max-width: 640px) {

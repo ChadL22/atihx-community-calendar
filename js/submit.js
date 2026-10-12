@@ -155,7 +155,7 @@
     }
 
     button.disabled = true;
-    button.textContent = 'Submitting…';
+    button.textContent = 'Sending…';
     fetch(API + '/api/submissions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -182,7 +182,7 @@
       })
       .finally(function () {
         button.disabled = false;
-        button.textContent = 'Submit event';
+        button.textContent = 'Add event';
       });
   });
 
