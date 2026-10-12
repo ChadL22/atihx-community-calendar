@@ -357,7 +357,12 @@ a.event-title:hover { text-decoration: underline; }
   .brand-logo { height: 56px; }
   .brand-divider { height: 34px; }
   .brand-name { font-size: 20px; }
-  .nav { gap: 6px 22px; font-size: 16px; }
+  .header-inner { flex-direction: column; align-items: center; gap: 8px; padding-top: 14px; padding-bottom: 10px; }
+  .nav { justify-content: center; gap: 0 22px; font-size: 16px; }
+  .nav > a, .dropdown-toggle { display: inline-flex; align-items: center; padding: 8px 0; line-height: 1.25; font-size: 16px; }
+  .dropdown-menu { right: auto; left: 50%; transform: translateX(-50%); }
+  .main { padding-top: 24px; }
+  .intro { gap: 10px; }
   .intro h1 { font-size: 34px; }
   .lead { font-size: 18px; }
   .about h2 { font-size: 34px; }
