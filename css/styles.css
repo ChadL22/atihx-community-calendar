@@ -112,7 +112,7 @@ button:disabled { cursor: default; opacity: 0.35; }
 .dropdown-menu a:hover { background: #f4f4f4; text-decoration: none; }
 
 /* ---------- Intro ---------- */
-.main { display: flex; flex-direction: column; gap: 28px; padding-top: 44px; padding-bottom: 72px; }
+.main { display: flex; flex-direction: column; gap: 28px; padding-top: 44px; padding-bottom: 48px; }
 .intro { display: flex; flex-direction: column; gap: 14px; max-width: 900px; }
 .intro h1 {
   margin: 0; font-family: var(--serif); font-weight: 400;
@@ -307,7 +307,7 @@ a.event-title:hover { text-decoration: underline; }
 
 /* ---------- About + carousel ---------- */
 .about { border-top: 1px solid var(--line-soft); }
-.about .wrap { padding-top: 72px; padding-bottom: 88px; display: flex; flex-direction: column; gap: 40px; }
+.about .wrap { padding-top: 56px; padding-bottom: 80px; display: flex; flex-direction: column; gap: 40px; }
 .about h2 { margin: 0; font-family: var(--serif); font-weight: 400; font-size: 52px; line-height: 1.1; letter-spacing: -0.01em; }
 .about-layout { display: flex; flex-wrap: wrap; gap: 48px 64px; align-items: flex-start; }
 .about-text { flex: 1 1 440px; min-width: 0; display: flex; flex-direction: column; gap: 20px; }
@@ -375,7 +375,8 @@ a.event-title:hover { text-decoration: underline; }
   /* On phones the Slack list only opens on tap (js/nav.js pins it under the button). */
   .dropdown:hover .dropdown-menu, .dropdown:focus-within .dropdown-menu { display: none; }
   .dropdown.is-open .dropdown-menu { display: block; z-index: 50; }
-  .main { padding-top: 24px; }
+  .main { padding-top: 24px; padding-bottom: 28px; }
+  .about .wrap { padding-top: 32px; padding-bottom: 48px; gap: 20px; }
   .intro { gap: 10px; }
   .intro h1 { font-size: 34px; }
   .lead { font-size: 18px; }
