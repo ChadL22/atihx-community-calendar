@@ -34,7 +34,8 @@
   var MON = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
   var DOW = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   var TZ_ABBR = { 'America/New_York': 'ET', 'America/Chicago': 'CT', 'America/Denver': 'MT', 'America/Los_Angeles': 'PT' };
-  var PAGE_SIZE = 6;
+  var VISIBLE_EVENTS = 5;   // the list shows this many, then scrolls
+  var PAST_DAYS = 60;       // "Past" covers the last 60 days
 
   var $ = function (id) { return document.getElementById(id); };
   var pad = function (n) { return String(n).padStart(2, '0'); };
@@ -47,6 +48,14 @@
   var now = new Date();
   var TODAY = now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate());
   var TODAY_INDEX = now.getFullYear() * 12 + now.getMonth();
+  var isoOf = function (d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); };
+  // "Upcoming" runs from today to the same date next month (Jan 31 -> Feb 28).
+  var UPCOMING_END = (function () {
+    var lastDay = new Date(now.getFullYear(), now.getMonth() + 2, 0).getDate();
+    return isoOf(new Date(now.getFullYear(), now.getMonth() + 1, Math.min(now.getDate(), lastDay)));
+  })();
+  var PAST_START = isoOf(new Date(now.getFullYear(), now.getMonth(), now.getDate() - PAST_DAYS));
+  var shortDate = function (iso) { return MON[Number(iso.slice(5, 7)) - 1].charAt(0) + MON[Number(iso.slice(5, 7)) - 1].slice(1).toLowerCase() + ' ' + Number(iso.slice(8, 10)); };
 
   // Months you can page through: every month with events, plus the current month.
   var monthIndex = function (iso) { return Number(iso.slice(0, 4)) * 12 + Number(iso.slice(5, 7)) - 1; };
@@ -63,7 +72,6 @@
     open: false,
     active: 0,             // highlighted suggestion
     tab: 'upcoming',
-    limit: PAGE_SIZE,
     month: TODAY_INDEX,
     subscribeOpen: false
   };
@@ -139,19 +147,29 @@
   /* ---------- upcoming / past list ---------- */
   function renderList() {
     var evs = visibleEvents();
-    var upcoming = evs.filter(function (e) { return e.start.slice(0, 10) >= TODAY; });
-    var past = evs.filter(function (e) { return e.start.slice(0, 10) < TODAY; }).reverse();
+    var upcoming = evs.filter(function (e) { var d = e.start.slice(0, 10); return d >= TODAY && d <= UPCOMING_END; });
+    var past = evs.filter(function (e) { var d = e.start.slice(0, 10); return d < TODAY && d >= PAST_START; }).reverse();
     var list = state.tab === 'upcoming' ? upcoming : past;
+    var box = $('event-list');
+
+    $('list-range').textContent = state.tab === 'upcoming'
+      ? 'Next month · ' + shortDate(TODAY) + ' – ' + shortDate(UPCOMING_END)
+      : 'Last 60 days · ' + shortDate(PAST_START) + ' – ' + shortDate(TODAY);
+    box.scrollTop = 0;
+    box.classList.remove('is-scrollable');
+    box.style.maxHeight = '';
 
     $('tab-upcoming').setAttribute('aria-selected', String(state.tab === 'upcoming'));
     $('tab-past').setAttribute('aria-selected', String(state.tab === 'past'));
 
     if (!list.length) {
       var scope = state.selected.length ? ' for ' + state.selected.map(function (id) { return BY_ID[id].short; }).join(' or ') : '';
-      $('event-list').innerHTML = '<div class="list-empty">No ' + state.tab + ' events' + scope + ' yet.</div>';
+      box.innerHTML = '<div class="list-empty">' + (state.tab === 'upcoming'
+        ? 'No events' + scope + ' in the next month yet.'
+        : 'No events' + scope + ' in the last 60 days.') + '</div>';
       return;
     }
-    var html = list.slice(0, state.limit).map(function (e) {
+    var html = list.map(function (e) {
       var c = BY_ID[e.community];
       var d = new Date(Number(e.start.slice(0, 4)), Number(e.start.slice(5, 7)) - 1, Number(e.start.slice(8, 10)));
       var title = e.url
@@ -166,11 +184,23 @@
         '<div><span class="badge" style="background:' + esc(c.color) + '">' + esc(c.name) + '</span></div>' +
         '</div></article>';
     }).join('');
-    if (list.length > state.limit) {
-      html += '<div class="list-empty"><button type="button" class="btn btn-outline btn-small" id="show-more">Show more</button></div>';
-    }
-    $('event-list').innerHTML = html;
+    box.innerHTML = html;
+    fitList();
   }
+
+  // Show the first few events, then let the list scroll.
+  function fitList() {
+    var box = $('event-list');
+    var items = box.querySelectorAll('.event');
+    box.classList.remove('is-scrollable');
+    box.style.maxHeight = '';
+    if (items.length <= VISIBLE_EVENTS) return;
+    var last = items[VISIBLE_EVENTS - 1];
+    box.style.maxHeight = (last.offsetTop - box.offsetTop + last.offsetHeight) + 'px';
+    box.classList.add('is-scrollable');
+  }
+  var resizeTimer;
+  window.addEventListener('resize', function () { clearTimeout(resizeTimer); resizeTimer = setTimeout(fitList, 150); });
 
   /* ---------- community filter ---------- */
   function suggestions() {
@@ -217,7 +247,6 @@
 
   function setSelected(ids) {
     state.selected = ids;
-    state.limit = PAGE_SIZE;
     renderAll();
   }
 
@@ -334,11 +363,8 @@
   $('next-month').addEventListener('click', function () { if (state.month < MAX_INDEX) { state.month++; renderCalendar(); } });
   $('today').addEventListener('click', function () { state.month = TODAY_INDEX; renderCalendar(); });
 
-  $('tab-upcoming').addEventListener('click', function () { state.tab = 'upcoming'; state.limit = PAGE_SIZE; renderList(); });
-  $('tab-past').addEventListener('click', function () { state.tab = 'past'; state.limit = PAGE_SIZE; renderList(); });
-  $('event-list').addEventListener('click', function (e) {
-    if (e.target.id === 'show-more') { state.limit += PAGE_SIZE; renderList(); }
-  });
+  $('tab-upcoming').addEventListener('click', function () { state.tab = 'upcoming'; renderList(); });
+  $('tab-past').addEventListener('click', function () { state.tab = 'past'; renderList(); });
 
   $('subscribe-toggle').addEventListener('click', function () { state.subscribeOpen = !state.subscribeOpen; renderSubscribe(); });
   $('subscribe-close').addEventListener('click', function () { state.subscribeOpen = false; renderSubscribe(); $('subscribe-toggle').focus(); });

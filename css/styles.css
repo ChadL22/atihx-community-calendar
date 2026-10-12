@@ -91,6 +91,7 @@ button:disabled { cursor: default; opacity: 0.35; }
 .brand-name { font-family: var(--serif); font-size: 24px; line-height: 1.1; }
 
 .nav { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 36px; font-size: 17px; }
+.nav a[aria-current="page"],
 .nav a:hover, .dropdown-toggle:hover {
   text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 2px;
 }
@@ -120,13 +121,13 @@ button:disabled { cursor: default; opacity: 0.35; }
 .lead { margin: 0; font-family: var(--serif); font-size: 21px; line-height: 1.45; color: var(--ink); }
 
 /* ---------- Toolbar: filter + subscribe ---------- */
-.toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
-.toolbar-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-left: auto; }
-.filter { display: flex; align-items: center; gap: 12px; flex: 1 1 380px; max-width: 620px; min-width: 0; }
-.filter-icon {
-  display: inline-flex; align-items: center; justify-content: center;
-  width: 44px; height: 44px; flex: none; cursor: pointer;
-}
+.toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 28px; }
+/* Same flex values and gap as .calendar-layout, so the toolbar lines up with
+   the calendar (left) and the event list (right). */
+.toolbar-main { flex: 999 1 560px; min-width: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.toolbar-side { flex: 1 1 320px; min-width: 0; display: flex; }
+.toolbar-side .btn { width: 100%; }
+.filter { display: flex; align-items: center; flex: 1 1 320px; max-width: 620px; min-width: 0; }
 .filter-box { position: relative; flex: 1; min-width: 0; }
 .field {
   display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
@@ -247,6 +248,17 @@ a.event-title:hover { text-decoration: underline; }
   color: var(--black); font-size: 13px; font-weight: 700;
 }
 .list-empty { padding: 32px 22px; text-align: center; font-size: 16px; color: var(--ink); }
+.list-range { margin: 0; padding: 10px 22px; border-bottom: 1px solid var(--line-soft); font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #555; }
+#event-list.is-scrollable {
+  overflow-y: auto; overscroll-behavior: contain;
+  /* soft shadows that appear when there is more to scroll */
+  background:
+    linear-gradient(#fff 30%, rgba(255,255,255,0)) top / 100% 40px no-repeat local,
+    linear-gradient(rgba(255,255,255,0), #fff 70%) bottom / 100% 40px no-repeat local,
+    radial-gradient(farthest-side at 50% 0, rgba(0,0,0,0.14), transparent) top / 100% 12px no-repeat scroll,
+    radial-gradient(farthest-side at 50% 100%, rgba(0,0,0,0.14), transparent) bottom / 100% 12px no-repeat scroll;
+}
+#event-list:focus-visible { outline-offset: -3px; }
 .events-foot { padding: 16px 22px; border-top: var(--border); font-size: 15px; color: var(--ink); }
 
 /* ---------- Submit page ---------- */
@@ -330,9 +342,8 @@ a.event-title:hover { text-decoration: underline; }
 
 /* ---------- Small screens ---------- */
 @media (max-width: 760px) {
-  .toolbar-actions { margin-left: 0; width: 100%; }
-  .toolbar-actions .btn { flex: 1 1 200px; }
   .filter { max-width: none; flex-basis: 100%; }
+  .toolbar-main .btn { width: 100%; }
 }
 @media (max-width: 640px) {
   .wrap { padding-left: 16px; padding-right: 16px; }
