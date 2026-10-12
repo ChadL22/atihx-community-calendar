@@ -355,7 +355,9 @@ a.event-title:hover { text-decoration: underline; }
   .lead { font-size: 18px; }
   .about h2 { font-size: 34px; }
   .about-text .lead-lg { font-size: 22px; }
-  .calendar-head { padding: 14px 14px; }
+  .calendar-head { padding: 16px 14px; flex-direction: column; justify-content: center; gap: 14px; }
+  .calendar-head h2 { text-align: center; }
+  .calendar-nav { justify-content: center; }
   .calendar-head h2 { font-size: 26px; }
   .cell { min-height: 70px; padding: 4px 3px 6px; }
   .daynum { font-size: 13px; }
