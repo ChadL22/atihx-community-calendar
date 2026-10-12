@@ -359,8 +359,8 @@
     if (dd && !dd.contains(e.target)) { dd.classList.remove('is-open'); dd.querySelector('.dropdown-toggle').setAttribute('aria-expanded', 'false'); }
   });
 
-  $('prev-month').addEventListener('click', function () { if (state.month > MIN_INDEX) { state.month--; renderCalendar(); } });
-  $('next-month').addEventListener('click', function () { if (state.month < MAX_INDEX) { state.month++; renderCalendar(); } });
+  $('prev-month').addEventListener('click', function () { goMonth(-1); });
+  $('next-month').addEventListener('click', function () { goMonth(1); });
   $('today').addEventListener('click', function () { state.month = TODAY_INDEX; renderCalendar(); });
 
   $('tab-upcoming').addEventListener('click', function () { state.tab = 'upcoming'; renderList(); });
@@ -385,6 +385,64 @@
     });
   }
 
+  /* ---------- swipe helper ----------
+     Calls onNext / onPrev when someone swipes (finger) or drags (mouse)
+     sideways across el, or scrolls sideways with a trackpad. Vertical
+     scrolling still works normally. */
+  function addSwipe(el, onNext, onPrev) {
+    var startX = 0, startY = 0, tracking = false, swiped = false;
+    el.addEventListener('pointerdown', function (e) {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      tracking = true; swiped = false; startX = e.clientX; startY = e.clientY;
+    });
+    el.addEventListener('pointerup', function (e) {
+      if (!tracking) return;
+      tracking = false;
+      var dx = e.clientX - startX, dy = e.clientY - startY;
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+        swiped = true;
+        if (dx < 0) onNext(); else onPrev();
+      }
+    });
+    el.addEventListener('pointercancel', function () { tracking = false; });
+    // A mouse drag shouldn't also count as a click on whatever was under it.
+    el.addEventListener('click', function (e) {
+      if (swiped) { e.preventDefault(); e.stopPropagation(); swiped = false; }
+    }, true);
+    el.addEventListener('dragstart', function (e) { e.preventDefault(); });
+    // Two-finger sideways scroll on a trackpad.
+    var acc = 0, lockedUntil = 0;
+    el.addEventListener('wheel', function (e) {
+      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+      e.preventDefault(); // stop the browser treating it as "go back"
+      if (Date.now() < lockedUntil) return;
+      acc += e.deltaX;
+      if (Math.abs(acc) > 60) {
+        if (acc > 0) onNext(); else onPrev();
+        acc = 0;
+        lockedUntil = Date.now() + 700;
+      }
+    }, { passive: false });
+  }
+
+  // Swipe the calendar to change months.
+  function goMonth(step) {
+    var next = state.month + step;
+    if (next < MIN_INDEX || next > MAX_INDEX) return;
+    state.month = next;
+    renderCalendar();
+    var grid = $('grid');
+    grid.classList.remove('slide-next', 'slide-prev');
+    void grid.offsetWidth; // restart the animation
+    grid.classList.add(step > 0 ? 'slide-next' : 'slide-prev');
+  }
+  addSwipe(document.querySelector('.calendar'), function () { goMonth(1); }, function () { goMonth(-1); });
+  document.querySelector('.calendar').addEventListener('keydown', function (e) {
+    if (e.target.closest('button, a, input')) return;
+    if (e.key === 'ArrowRight') { e.preventDefault(); goMonth(1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); goMonth(-1); }
+  });
+
   /* ---------- photo carousel ---------- */
   (function carousel() {
     var root = $('carousel');
@@ -393,7 +451,7 @@
     var dots = $('carousel-dots');
     var city = $('carousel-city');
     var current = 0, timer = null, paused = false;
-    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var canHover = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
     dots.innerHTML = slides.map(function (img, i) {
       return '<button type="button" data-slide="' + i + '" aria-label="Show photo ' + (i + 1) + ': ' + esc(img.getAttribute('data-city')) + '"><span></span></button>';
@@ -410,16 +468,19 @@
     }
     function start() {
       clearInterval(timer);
-      if (!reduceMotion && slides.length > 1) timer = setInterval(function () { if (!paused) show(current + 1); }, 5000);
+      if (slides.length > 1) timer = setInterval(function () { if (!paused && !document.hidden) show(current + 1); }, 5000);
     }
     dots.addEventListener('click', function (e) {
       var b = e.target.closest('[data-slide]');
       if (b) { show(Number(b.getAttribute('data-slide'))); start(); }
     });
-    root.addEventListener('mouseenter', function () { paused = true; });
-    root.addEventListener('mouseleave', function () { paused = false; });
-    root.addEventListener('focusin', function () { paused = true; });
-    root.addEventListener('focusout', function () { paused = false; });
+    addSwipe(root.querySelector('.carousel-frame'), function () { show(current + 1); start(); }, function () { show(current - 1); start(); });
+    // Pause while a mouse is over the photos (desktop only; on phones a tap
+    // would otherwise pause it forever).
+    if (canHover) {
+      root.addEventListener('mouseenter', function () { paused = true; });
+      root.addEventListener('mouseleave', function () { paused = false; });
+    }
     show(0);
     start();
   })();
