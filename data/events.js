@@ -45,6 +45,48 @@ window.ATIH_DATA = {
       "url": "https://luma.com/ubp5408a",
       "description": "An informal, independently organized happy hour to talk about improving the responsible tech field: responsible AI, tech policy, trust & safety, youth and wellbeing, and cyber and democracy. Attendees are asked to make a purchase at the venue.",
       "source": "luma"
+    },
+    {
+      "id": "luma-g5n0jr1i",
+      "community": "philly",
+      "title": "ATIHx Philadelphia: America's 250th & the Future of Responsible Tech",
+      "start": "2026-08-20T19:00",
+      "end": "2026-08-20T21:00",
+      "timezone": "America/New_York",
+      "venue": "Center City West",
+      "address": "Philadelphia, PA (exact address shared with registered guests)",
+      "host": "ATIHx Philadelphia (Kristina Kroot, Alyssa Ariana Safia Boicel)",
+      "url": "https://luma.com/g5n0jr1i",
+      "description": "An informal evening for practitioners, researchers and community members to talk responsible tech, tied to America's 250th anniversary and the local climate. Includes a facilitated roundtable, resource sharing and networking.",
+      "source": "luma"
+    },
+    {
+      "id": "igf-usa-2026",
+      "community": "philly",
+      "title": "IGF-USA 2026",
+      "start": "2026-09-09T10:30",
+      "end": "2026-09-09T17:00",
+      "timezone": "America/New_York",
+      "venue": "Museum of the American Revolution, Liberty Hall",
+      "address": "101 S Third St, Philadelphia, PA 19106",
+      "host": "IGF-USA",
+      "url": "https://www.surveymonkey.com/r/6CTT7GC",
+      "description": "IGF-USA 2026, held in person at the Museum of the American Revolution with an online option (Zoom details sent to registrants).",
+      "source": "surveymonkey"
+    },
+    {
+      "id": "luma-cso4v1ie",
+      "community": "philly",
+      "title": "HackAI Philly",
+      "start": "2026-09-10T18:00",
+      "end": "2026-09-10T20:00",
+      "timezone": "America/New_York",
+      "venue": "The Hallwayz",
+      "address": "840 1st Ave Ste 400, King of Prussia, PA 19406",
+      "host": "Hack AI with PostHog",
+      "url": "https://luma.com/cso4v1ie",
+      "description": "Food and networking, a short AI current-events segment with trivia prizes, two presentations, and a hacking session to work on AI projects. Open to technical and non-technical people interested in AI.",
+      "source": "luma"
     }
   ]
 };

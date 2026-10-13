@@ -24,4 +24,46 @@ DTSTART:19701101T020000
 RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU
 END:STANDARD
 END:VTIMEZONE
+BEGIN:VEVENT
+UID:luma-g5n0jr1i@atihx-community-calendar
+DTSTAMP:20261013T170305Z
+DTSTART;TZID=America/New_York:20260820T190000
+DTEND;TZID=America/New_York:20260820T210000
+SUMMARY:ATIHx Philadelphia: America's 250th & the Future of Responsible Tec
+ h · ATIHx Philly
+LOCATION:Center City West\, Philadelphia\, PA (exact address shared with re
+ gistered guests)
+DESCRIPTION:Hosted by ATIHx Philadelphia (Kristina Kroot\, Alyssa Ariana Sa
+ fia Boicel)\n\nAn informal evening for practitioners\, researchers and com
+ munity members to talk responsible tech\, tied to America's 250th annivers
+ ary and the local climate. Includes a facilitated roundtable\, resource sh
+ aring and networking.\n\nhttps://luma.com/g5n0jr1i
+URL:https://luma.com/g5n0jr1i
+END:VEVENT
+BEGIN:VEVENT
+UID:igf-usa-2026@atihx-community-calendar
+DTSTAMP:20261013T170305Z
+DTSTART;TZID=America/New_York:20260909T103000
+DTEND;TZID=America/New_York:20260909T170000
+SUMMARY:IGF-USA 2026 · ATIHx Philly
+LOCATION:Museum of the American Revolution\, Liberty Hall\, 101 S Third St\
+ , Philadelphia\, PA 19106
+DESCRIPTION:Hosted by IGF-USA\n\nIGF-USA 2026\, held in person at the Museu
+ m of the American Revolution with an online option (Zoom details sent to r
+ egistrants).\n\nhttps://www.surveymonkey.com/r/6CTT7GC
+URL:https://www.surveymonkey.com/r/6CTT7GC
+END:VEVENT
+BEGIN:VEVENT
+UID:luma-cso4v1ie@atihx-community-calendar
+DTSTAMP:20261013T170305Z
+DTSTART;TZID=America/New_York:20260910T180000
+DTEND;TZID=America/New_York:20260910T200000
+SUMMARY:HackAI Philly · ATIHx Philly
+LOCATION:The Hallwayz\, 840 1st Ave Ste 400\, King of Prussia\, PA 19406
+DESCRIPTION:Hosted by Hack AI with PostHog\n\nFood and networking\, a short
+  AI current-events segment with trivia prizes\, two presentations\, and a 
+ hacking session to work on AI projects. Open to technical and non-technica
+ l people interested in AI.\n\nhttps://luma.com/cso4v1ie
+URL:https://luma.com/cso4v1ie
+END:VEVENT
 END:VCALENDAR
