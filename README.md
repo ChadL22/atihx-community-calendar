@@ -6,7 +6,9 @@ A community-built project from the ATIHx Philadelphia and Washington, D.C. commu
 
 ## How events get on the calendar
 
-People submit events on `submit.html`. Submissions go to a small Cloudflare backend (in `backend/`) that blocks bots, catches duplicates and holds each event for a community lead to approve. Approved events appear on the calendar and in everyone's subscribed calendars automatically.
+Every "Add An Event" button sends people to the All Tech Is Human calendar on Luma (https://luma.com/AllTechIsHuman), where the **Submit Event** button lets them create a new event, submit an existing Luma event, or submit an external one (Eventbrite, etc.). Once an event is accepted on Luma, add it to `data/events.json` (see below).
+
+`submit.html` and the Cloudflare backend are kept for later but aren't linked from the site right now. With the backend, submissions go to a small Cloudflare backend (in `backend/`) that blocks bots, catches duplicates and holds each event for a community lead to approve. Approved events appear on the calendar and in everyone's subscribed calendars automatically.
 
 **Setting up the backend:** follow [`backend/SETUP.md`](backend/SETUP.md). Until it's connected (`apiBase` empty in `js/config.js`), the site runs on the sample events in `data/` so you can preview everything.
 
