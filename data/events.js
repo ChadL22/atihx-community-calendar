@@ -299,6 +299,20 @@ window.ATIH_DATA = {
       "source": "luma"
     },
     {
+      "id": "kgi-meta-settlement-oversight-2026",
+      "community": "dc",
+      "title": "The Meta Settlement's Next Phase: Getting Independent Oversight Right",
+      "start": "2026-10-21T13:00",
+      "end": "2026-10-21T14:00",
+      "timezone": "America/New_York",
+      "venue": "Online (Zoom webinar)",
+      "address": "",
+      "host": "Knight-Georgetown Institute",
+      "url": "https://kgi.georgetown.edu/events/the-meta-settlements-next-phase-getting-independent-oversight-right/",
+      "description": "A webinar on how independent oversight of Meta's youth-safety commitments should work: who audits, what gets measured, what data access is needed, and how findings reach the public. With Arturo Béjar, Laura Edelson and Jeff Allen, moderated by KGI's Peter Chapman. Registration required.",
+      "source": "georgetown"
+    },
+    {
       "id": "trust-in-media-deepfakes-2026",
       "community": "dc",
       "title": "Deepfakes + Disinformation: Navigating the New Frontlines of Crisis Response",
