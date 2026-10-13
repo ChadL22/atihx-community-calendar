@@ -76,23 +76,37 @@
     <a class="btn btn-dark btn-large" href="https://luma.com/create?calendar=cal-tp9fJuQNa1rcyNN">Create on Luma ↗</a>
   </section>
 
-  <!-- 2 and 3. Our form; the Luma bot submits it to the ATIH calendar for you. -->
+  <!-- 2 and 3. Paste a link, check the preview, press one button. The Luma bot
+       (backend/src/luma-bot.js) then submits it to the ATIH calendar on Luma. -->
   <form class="panel add-panel submit-form" id="luma-form" novalidate hidden>
-    <div class="fieldset" data-kind="existing">
-      <h2 class="span-2">Your Luma event</h2>
-      <label class="form-field span-2" data-field="url">
-        <span>Luma event link</span>
-        <input name="url" type="url" inputmode="url" maxlength="500" placeholder="https://luma.com/abc123">
-        <span class="hint">Open your event on Luma and copy the address from your browser.</span>
+    <div class="link-step">
+      <label class="form-field" data-field="url" for="event-link">
+        <span id="link-label">Paste your Luma event link</span>
+        <span class="link-box">
+          <input id="event-link" name="url" type="url" inputmode="url" autocomplete="off" maxlength="500" placeholder="https://luma.com/abc123">
+          <span class="link-status" id="link-status" aria-live="polite"></span>
+        </span>
+        <span class="hint" id="link-hint">Open your event on Luma and copy the address from your browser.</span>
       </label>
     </div>
 
-    <div class="fieldset" data-kind="external">
-      <h2 class="span-2">Your event</h2>
-      <label class="form-field span-2" data-field="url">
-        <span>Event page link</span>
-        <input name="url" type="url" inputmode="url" maxlength="500" placeholder="https://www.eventbrite.com/e/some-event">
-      </label>
+    <div class="preview" id="preview" hidden>
+      <div class="preview-main">
+        <div class="preview-date" id="pv-date" aria-hidden="true"></div>
+        <div class="preview-body">
+          <h2 class="preview-title" id="pv-title"></h2>
+          <p class="preview-line" id="pv-when"></p>
+          <p class="preview-line" id="pv-where"></p>
+          <p class="preview-line" id="pv-host"></p>
+        </div>
+      </div>
+      <p class="where-hint" id="pv-hint"></p>
+      <button type="button" class="link-button strong" id="edit-toggle" hidden aria-expanded="false" aria-controls="details">Edit details</button>
+    </div>
+
+    <!-- Non-Luma events: details read from the page, editable before sending. -->
+    <div class="fieldset details" id="details" hidden>
+      <p class="form-message is-info span-2" id="details-note" hidden></p>
       <label class="form-field span-2" data-field="name">
         <span>Event name</span>
         <input name="name" maxlength="140" placeholder="e.g. Responsible AI Happy Hour">
@@ -100,11 +114,11 @@
       <label class="form-field span-2" data-field="location">
         <span>Address</span>
         <input name="location" maxlength="200" autocomplete="off" placeholder="e.g. 400 8th St NW, Washington, DC">
-        <span class="hint">Street address and city. Only in-person events in the DMV or the Philadelphia area appear on this calendar.</span>
+        <span class="hint">Street address and city.</span>
       </label>
       <label class="form-field span-2" data-field="host">
         <span>Host <span class="optional">(optional)</span></span>
-        <input name="host" maxlength="200" placeholder="e.g. ATIHx DC with Code for DC">
+        <input name="host" maxlength="200" placeholder="e.g. Code for DC">
       </label>
       <label class="form-field" data-field="date">
         <span>Date</span>
@@ -113,35 +127,36 @@
       <div class="form-row">
         <label class="form-field" data-field="startTime">
           <span>Starts</span>
-          <input name="startTime" type="time" value="18:00">
+          <input name="startTime" type="time">
         </label>
         <label class="form-field" data-field="endTime">
           <span>Ends</span>
-          <input name="endTime" type="time" value="20:00">
+          <input name="endTime" type="time">
         </label>
       </div>
       <p class="hint span-2">Times are Eastern Time.</p>
     </div>
 
-    <div class="fieldset">
-      <h2 class="span-2">About you</h2>
-      <label class="form-field" data-field="submitterName">
-        <span>Your name</span>
-        <input name="submitterName" maxlength="100" autocomplete="name">
-      </label>
-      <label class="form-field" data-field="submitterEmail">
-        <span>Your email</span>
-        <input name="submitterEmail" type="email" maxlength="200" autocomplete="email">
-        <span class="hint">Only our community admins see this, in case there’s a question.</span>
-      </label>
-    </div>
+    <details class="about-you" id="about-you">
+      <summary>Add your name and email <span class="optional">(optional)</span></summary>
+      <div class="fieldset">
+        <label class="form-field" data-field="submitterName">
+          <span>Your name</span>
+          <input name="submitterName" maxlength="100" autocomplete="name">
+        </label>
+        <label class="form-field" data-field="submitterEmail">
+          <span>Your email</span>
+          <input name="submitterEmail" type="email" maxlength="200" autocomplete="email">
+        </label>
+        <p class="hint span-2">Only our community admins see these, in case there’s a question. Saved on this device for next time.</p>
+      </div>
+    </details>
 
     <div class="hp" aria-hidden="true"><label>Leave this empty<input name="website" tabindex="-1" autocomplete="off"></label></div>
     <div id="turnstile"></div>
     <div class="form-message is-error" id="form-error" role="alert" tabindex="-1" hidden></div>
     <div class="form-actions">
-      <button type="submit" class="btn btn-dark btn-large" id="send-button">Send to Luma</button>
-      <span class="hint">We submit it to All Tech Is Human’s Luma calendar for you.</span>
+      <button type="submit" class="btn btn-dark btn-large" id="send-button" disabled>Submit to the ATIH calendar</button>
     </div>
   </form>
 

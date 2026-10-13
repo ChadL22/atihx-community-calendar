@@ -46,8 +46,8 @@ export function validateLumaSubmission(input, { today }) {
 
   const submitterName = text(b.submitterName, 100);
   const submitterEmail = text(b.submitterEmail, 200).toLowerCase();
-  if (!submitterName) errors.submitterName = 'Add your name.';
-  if (!EMAIL.test(submitterEmail)) errors.submitterEmail = 'Add an email address we can reach you at.';
+  // Name and email are optional; if an email is given it must look real.
+  if (submitterEmail && !EMAIL.test(submitterEmail)) errors.submitterEmail = 'That email address doesn’t look right.';
 
   const value = { kind, submitterName, submitterEmail, payload: {} };
 

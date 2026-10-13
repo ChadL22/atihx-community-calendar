@@ -418,7 +418,7 @@
         return '<div class="row luma-row"><div>' +
           '<strong>' + esc(title) + '</strong> <span class="pill-status ' + esc(it.status) + '">' + esc(LUMA_LABELS[it.status] || it.status) + '</span>' +
           '<div class="meta">' + when + '</div>' +
-          '<div class="meta">From ' + esc(it.submitter_name) + ' (<a class="ulink" href="mailto:' + esc(it.submitter_email) + '">' + esc(it.submitter_email) + '</a>) · ' + since(it.created_at) +
+          '<div class="meta">From ' + (it.submitter_name ? esc(it.submitter_name) : 'a visitor') + (it.submitter_email ? ' (<a class="ulink" href="mailto:' + esc(it.submitter_email) + '">' + esc(it.submitter_email) + '</a>)' : '') + ' · ' + since(it.created_at) +
           ' · <a class="ulink" href="' + esc(it.event_url) + '" target="_blank" rel="noopener">event page ↗</a></div>' +
           (it.last_error && it.status !== 'submitted' ? '<div class="err">' + esc(it.last_error) + '</div>' : '') +
           '</div>' +

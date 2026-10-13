@@ -9,6 +9,7 @@
 
 import { validateLumaSubmission } from './luma-validate.js';
 import { submitItem, NeedsLogin } from './luma-bot.js';
+import { previewLink } from './preview.js';
 
 const PER_HOUR = 5;          // submissions per visitor per hour
 const PER_RUN = 4;           // events the bot handles per run (Free plan: 10 browser-minutes a day)
@@ -65,6 +66,12 @@ export async function postLumaSubmission(request, env, h) {
   const { value, errors } = validateLumaSubmission(body, { today: h.todayIn('America/New_York') });
   if (Object.keys(errors).length) {
     return h.json({ error: 'invalid', message: 'Please fix the highlighted fields.', fields: errors }, 422);
+  }
+
+  // Catch bad Luma links now, instead of letting the bot fail on them later.
+  if (value.kind === 'existing') {
+    const p = await previewLink(value.eventUrl, { fetchImpl: env.FETCH || fetch });
+    if (!p.ok) return h.json({ error: 'invalid', message: p.message, fields: { url: p.message } }, 422);
   }
 
   const already = await env.DB.prepare(

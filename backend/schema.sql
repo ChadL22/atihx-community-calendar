@@ -109,3 +109,11 @@ CREATE TABLE IF NOT EXISTS bot_status (
   value       TEXT NOT NULL DEFAULT '',
   updated_at  TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
 );
+
+-- Light rate limiting for link previews on the Add An Event page (salted IP
+-- hashes, kept for an hour).
+CREATE TABLE IF NOT EXISTS preview_log (
+  ip_hash     TEXT NOT NULL,
+  created_at  TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
+);
+CREATE INDEX IF NOT EXISTS preview_log_by_ip ON preview_log (ip_hash, created_at);

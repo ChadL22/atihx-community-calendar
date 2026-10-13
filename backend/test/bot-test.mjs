@@ -100,6 +100,7 @@ const env = {
   LUMA_CALENDAR_URL: `http://localhost:${MOCK_PORT}/AllTechIsHuman`,
   LUMA_COOKIE_DOMAIN: 'localhost',
   LUMA_SESSION: GOOD,
+  FETCH: async () => { throw new Error('offline'); }, // Luma lookups unavailable: links are accepted and checked by the bot
 };
 let ipCounter = 1;
 const submit = (body, e = env) =>

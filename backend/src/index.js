@@ -6,6 +6,7 @@
 //   GET  /api/events                 { communities, events } (approved only)
 //   GET  /calendars/<slug>.ics       subscribable feed: all, philly, dc, dc+philly…
 //   POST /api/submissions            submit an event (Turnstile protected)
+//   GET  /api/preview?url=…          preview a Luma or event-page link (see preview.js)
 //   POST /api/luma-submissions       send an event to the ATIH calendar on Luma (see luma-queue.js)
 //
 // Moderators (behind Cloudflare Access)
@@ -29,6 +30,7 @@ import { buildIcs } from './ics.js';
 import { getAccessEmail } from './access.js';
 import { validateEvent, dedupeKey } from './validate.js';
 import { postLumaSubmission, processQueue, handleLumaAdmin } from './luma-queue.js';
+import { previewLink } from './preview.js';
 
 // Loaded only when the bot runs, so tests and local dev don't need the package.
 const launchBrowser = async (env) => (await import('./browser.js')).launchBrowser(env);
@@ -592,6 +594,23 @@ export default {
         const headers = new Headers(res.headers);
         Object.entries(corsHeaders(request, env)).forEach(([k, v]) => headers.set(k, v));
         return new Response(res.body, { status: res.status, headers });
+      }
+
+      if (pathname === '/api/preview' && request.method === 'GET') {
+        const cors = corsHeaders(request, env);
+        const origin = request.headers.get('Origin');
+        if (origin && !allowedOrigins(env).includes(origin)) return json({ ok: false, message: 'Not allowed from this site.' }, 403);
+        const ip = request.headers.get('CF-Connecting-IP') || '';
+        const ipHash = await sha256Hex(`${env.IP_HASH_SALT || 'dev-salt'}|preview|${ip}`);
+        const since = new Date(Date.now() - 10 * 60000).toISOString().replace(/\.\d+Z$/, 'Z');
+        const recent = await env.DB.prepare('SELECT COUNT(*) AS n FROM preview_log WHERE ip_hash = ?1 AND created_at > ?2').bind(ipHash, since).first();
+        if (recent && recent.n >= 40) return json({ ok: false, message: 'Too many previews in a short time. Please wait a few minutes.' }, 429, cors);
+        await env.DB.batch([
+          env.DB.prepare('INSERT INTO preview_log (ip_hash) VALUES (?1)').bind(ipHash),
+          env.DB.prepare('DELETE FROM preview_log WHERE created_at < ?1').bind(new Date(Date.now() - 3600000).toISOString().replace(/\.\d+Z$/, 'Z')),
+        ]);
+        const result = await previewLink(url.searchParams.get('url'), { fetchImpl: env.FETCH || fetch });
+        return json(result, 200, { ...cors, 'Cache-Control': 'no-store' });
       }
 
       if (pathname === '/api/luma-submissions' && request.method === 'POST') {

@@ -442,7 +442,7 @@ window.ATIH_DATA = {
       "start": "2026-10-28T16:00",
       "end": "2026-10-28T17:30",
       "timezone": "America/New_York",
-      "venue": "Georgetown University",
+      "venue": "Copley Formal Lounge, Georgetown University",
       "address": "37th and O Streets NW, Washington, DC 20057",
       "host": "Georgetown University Center for Digital Ethics",
       "url": "https://events.georgetown.edu/digital-ethics/event/42121-book-talk-georgetown-10-28-26-danah-boyd-data",

@@ -148,10 +148,12 @@ The **Add An Event** page (`add.html`) offers three choices:
 | Choice | What happens |
 |---|---|
 | A new Luma event | Opens Luma's create page, already set to the All Tech Is Human calendar. Nothing to set up. |
-| An existing Luma event | Our form → the queue → the Luma bot submits it with **Submit Event → Submit Existing Luma Event**. |
-| A non-Luma event | Our form → the queue → the Luma bot submits it with **Submit Event → Submit External Event**. |
+| An existing Luma event | Paste the link → a preview from Luma → **Submit to the ATIH calendar**. The Luma bot then submits it with **Submit Event → Submit Existing Luma Event**. |
+| A non-Luma event | Paste the link → we read the name, date, times, address and host from the page (editable) → **Submit to the ATIH calendar**. The Luma bot then submits it with **Submit Event → Submit External Event**. |
 
 Luma's admins accept or decline submissions as usual. Accepted in-person DMV and Philadelphia events reach our calendar through the hourly Luma sync (`scripts/sync_luma.py`).
+
+**Link previews** (`src/preview.js`, `GET /api/preview`): Luma links are looked up through Luma's public event lookup. Other links are read from the event data most event sites publish for search engines. If a site blocks the lookup or has no event data, the visitor fills in the details instead. Each preview says whether the place looks like it's in the DMV or Philadelphia area, as a hint only; the hourly sync makes the final call.
 
 **How the bot works:** every 2 minutes, if anything is waiting, the Worker starts a headless Chrome through Cloudflare **Browser Rendering**. It opens the ATIH calendar on Luma, signed in as the community's own Luma account, and fills in Luma's form the way a person would. The code is in `src/luma-bot.js`. It uses no browser time when the queue is empty.
 
@@ -236,7 +238,7 @@ node --experimental-sqlite test/dev-server.mjs
 
 This does the same on port 8787 using a local SQLite file.
 
-**Tests:** `npm test` runs 27 checks covering submissions, duplicates, rate limiting, lead permissions and Access sign-in verification. `npm run test:bot` runs the Luma bot end to end in a real browser against a stand-in Luma page (needs Playwright: `npx playwright install chromium` the first time).
+**Tests:** `npm test` runs 27 backend checks plus 12 link-preview checks, covering submissions, duplicates, rate limiting, lead permissions and Access sign-in verification. `npm run test:bot` runs the Luma bot end to end in a real browser against a stand-in Luma page (needs Playwright: `npx playwright install chromium` the first time).
 
 ## Costs
 
