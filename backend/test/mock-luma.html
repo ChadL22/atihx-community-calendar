@@ -1,0 +1,149 @@
+<!doctype html>
+<!-- A stand-in for the ATIH calendar page on Luma, used only by test/bot-test.mjs.
+     It copies the parts the Luma bot touches (as of Oct 2026): the Submit Event
+     button and menu, and the "Submit Luma Event" / "Submit External Event"
+     forms with the same class names, field names and placeholders. -->
+<html><head><meta charset="utf-8"><title>All Tech Is Human · Events Calendar</title>
+<style>
+  body { font-family: sans-serif; background: #111; color: #eee; }
+  .lux-menu { position: absolute; background: #222; padding: 6px; border-radius: 8px; }
+  .lux-menu-item { padding: 8px 12px; cursor: pointer; }
+  .lux-modal { position: fixed; top: 60px; left: 50%; transform: translateX(-50%); width: 560px; background: #2a2a2a; padding: 20px; border-radius: 12px; }
+  .lux-modal input { display: block; width: 100%; margin: 6px 0; padding: 8px; }
+  .addr-wrap { position: relative; }
+  .hidden { display: none; }
+</style></head>
+<body>
+<nav>Events · Calendars · Discover <span id="auth">__AUTH__</span></nav>
+<h1>All Tech Is Human</h1>
+<button id="submit-event" type="button">＋ Submit Event</button>
+<div id="root"></div>
+<script>
+const root = document.getElementById('root');
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const fmt = (d) => `${DAYS[d.getDay()]}, ${MONTHS[d.getMonth()]} ${d.getDate()}`;
+const iso = (d) => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+function closeAll() { document.querySelectorAll('.lux-menu, .lux-modal').forEach((e) => e.remove()); }
+async function record(data) {
+  await fetch('/__submitted', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+}
+
+document.getElementById('submit-event').addEventListener('click', () => {
+  closeAll();
+  const menu = document.createElement('div');
+  menu.className = 'lux-menu';
+  menu.innerHTML = '<div class="rows"><div class="lux-menu-item">Create New Event</div><div class="lux-menu-item">Submit Existing Luma Event</div><div class="lux-menu-item">Submit External Event</div></div>';
+  menu.addEventListener('click', (e) => {
+    const t = e.target.closest('.lux-menu-item');
+    if (!t) return;
+    menu.remove();
+    if (t.textContent === 'Submit Existing Luma Event') openExisting();
+    if (t.textContent === 'Submit External Event') openExternal();
+  });
+  document.body.appendChild(menu);
+});
+
+function modalShell(title) {
+  const m = document.createElement('div');
+  m.className = 'lux-modal regular';
+  m.innerHTML = `<button type="button" class="close">✕</button><div class="lux-modal-title">${title}</div><div class="body"></div>`;
+  m.querySelector('.close').onclick = () => m.remove();
+  document.body.appendChild(m);
+  return m;
+}
+
+function openExisting() {
+  const m = modalShell('Submit Luma Event');
+  m.querySelector('.body').innerHTML = `
+    <div class="input-row"><input type="url" class="lux-input" placeholder="Enter Luma Event URL">
+    <button type="button" class="btn input-add-button hidden">Add</button></div>
+    <div class="picked"></div><div class="error-msg"></div>
+    <div>Suggested Events<div>Tech Policy Hub Speaker Series</div></div>
+    <button type="button" class="pill">Add Tag</button>
+    <button type="button" class="btn submit" disabled>Submit Event</button>`;
+  const input = m.querySelector('input'), add = m.querySelector('.input-add-button'), submit = m.querySelector('.submit');
+  const picked = [];
+  input.addEventListener('input', () => add.classList.toggle('hidden', !input.value));
+  add.onclick = async () => {
+    const slug = (input.value.match(/(?:luma\.com|lu\.ma)\/([\w-]+)/) || [])[1] || '';
+    await new Promise((r) => setTimeout(r, 300));
+    if (!/^[a-z0-9]{8}$/.test(slug)) { m.querySelector('.error-msg').textContent = 'Event not found'; return; }
+    picked.push(slug);
+    m.querySelector('.picked').innerHTML += `<div>Event ${slug}</div>`;
+    input.value = ''; add.classList.add('hidden'); submit.disabled = false;
+  };
+  submit.onclick = async () => { await record({ kind: 'existing', slugs: picked }); m.remove(); };
+}
+
+function openExternal() {
+  const m = modalShell('Submit External Event');
+  const now = new Date();
+  const later = new Date(now.getTime() + 3600e3);
+  m.querySelector('.body').innerHTML = `
+    <form>
+    <label>Event Page URL *<input type="url" name="url" class="lux-input" placeholder="https://eventbrite.com/e/some-event" required></label>
+    <div class="parse-wrapper hidden">Parsing URL...</div>
+    <label>Event Name *<input type="text" name="name" class="lux-input" placeholder="Happy Hour Drinks"></label>
+    <label>Event Location<div class="addr-wrap"><input type="text" class="lux-input clearable" placeholder="What’s the address?"></div></label>
+    <label>Host<input type="text" name="host" class="lux-input" placeholder="Friends of the City"></label>
+    <div class="times">
+      <input type="text" class="dt-input animated" data-role="sd" value="${fmt(now)}" data-shown="${fmt(now)}" data-iso="${iso(now)}">
+      <input type="time" class="dt-input animated mono-number" data-role="st" value="15:00" placeholder="HH:MM">
+      <input type="text" class="dt-input animated" data-role="ed" value="${fmt(later)}" data-shown="${fmt(later)}" data-iso="${iso(later)}">
+      <input type="time" class="dt-input animated mono-number" data-role="et" value="16:00" placeholder="HH:MM">
+    </div>
+    <div>GMT-04:00 New York</div>
+    <button type="button" class="pill">Add Tag</button>
+    <button type="submit" class="btn primary">Submit Event</button>
+    <div class="form-error" role="alert"></div>
+    </form>`;
+  const q = (s) => m.querySelector(s);
+  // Luma parses the URL and pre-fills the name.
+  q('input[name=url]').addEventListener('input', () => {
+    q('.parse-wrapper').classList.remove('hidden');
+    clearTimeout(q('input[name=url]')._t);
+    q('input[name=url]')._t = setTimeout(() => {
+      q('.parse-wrapper').classList.add('hidden');
+      if (!q('input[name=name]').value) q('input[name=name]').value = 'Parsed Title From URL';
+    }, 800);
+  });
+  // Date boxes accept typed dates like "Nov 10, 2026"; the end date follows the start.
+  const parseDate = (el) => {
+    if (el.value === el.dataset.shown) return; // already parsed (the display has no year)
+    const d = new Date(el.value);
+    if (Number.isNaN(d.getTime())) return;
+    el.value = el.dataset.shown = fmt(d); el.dataset.iso = iso(d);
+    if (el.dataset.role === 'sd') { const ed = q('[data-role=ed]'); ed.value = ed.dataset.shown = fmt(d); ed.dataset.iso = iso(d); }
+  };
+  m.querySelectorAll('input[type=text].dt-input').forEach((el) => {
+    el.addEventListener('keydown', (e) => { if (e.key === 'Enter') parseDate(el); });
+    el.addEventListener('blur', () => parseDate(el));
+  });
+  // Address search: only real typing (keydown) opens suggestions, like Google Places.
+  const addr = q('input[placeholder="What’s the address?"]');
+  let typed = false;
+  addr.addEventListener('keydown', () => { typed = true; });
+  addr.addEventListener('input', () => {
+    document.querySelectorAll('.lux-menu.places').forEach((e) => e.remove());
+    if (!typed || addr.value.length < 4) return;
+    const menu = document.createElement('div');
+    menu.className = 'lux-menu places';
+    menu.innerHTML = `<div class="rows"><div class="lux-menu-item">${addr.value} (Washington, DC, USA)</div><div class="lux-menu-item">${addr.value} (Arlington, VA, USA)</div></div>`;
+    menu.onclick = (e) => { const t = e.target.closest('.lux-menu-item'); if (t) { addr.value = t.textContent; addr.dataset.place = t.textContent; menu.remove(); } };
+    document.body.appendChild(menu);
+  });
+  q('form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!q('input[name=url]').value || !q('input[name=name]').value) { q('.form-error').textContent = 'Please fill in the required fields.'; return; }
+    await record({
+      kind: 'external', url: q('input[name=url]').value, name: q('input[name=name]').value, host: q('input[name=host]').value,
+      location: addr.dataset.place || addr.value,
+      startDate: q('[data-role=sd]').dataset.iso, startTime: q('[data-role=st]').value,
+      endDate: q('[data-role=ed]').dataset.iso, endTime: q('[data-role=et]').value,
+    });
+    m.remove();
+  });
+}
+</script>
+</body></html>

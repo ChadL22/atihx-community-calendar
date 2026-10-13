@@ -279,29 +279,48 @@ a.chip:hover { text-decoration: underline; }
 .events-foot { padding: 14px 22px; border-top: var(--border); font-size: 15px; color: var(--ink); }
 
 /* ---------- Add An Event chooser ---------- */
-.choose-title { margin: 36px 0 16px; font-family: var(--serif); font-size: 26px; font-weight: 400; }
-.choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; align-items: stretch; }
-.choice { position: relative; display: flex; flex-direction: column; gap: 12px; padding: 26px 24px 24px; }
-.choice h3 { margin: 0; font-size: 21px; font-weight: 700; }
-.choice p { margin: 0; font-size: 16px; line-height: 1.5; color: var(--ink); }
+.choices { border: 0; margin: 32px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.choose-title { padding: 0; margin: 0 0 14px; font-family: var(--serif); font-size: 26px; font-weight: 400; }
+.choice-card {
+  position: relative; display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; align-items: center;
+  padding: 18px 20px; border: var(--border); border-radius: var(--radius); background: var(--white); cursor: pointer;
+  transition: background-color .15s, box-shadow .15s;
+}
+.choice-card:hover { background: var(--weekend-bg); }
+.choice-card input { position: absolute; opacity: 0; pointer-events: none; }
+.choice-card:has(input:checked) { background: var(--black); color: var(--white); }
+.choice-card:has(input:checked) .choice-num { border-color: var(--white); }
+.choice-card:has(input:focus-visible) { box-shadow: 0 0 0 3px var(--coral); }
 .choice-num {
-  display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px;
+  grid-row: span 2; display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px;
   border: var(--border); border-radius: 50%; font-weight: 700; font-size: 16px;
 }
+.choice-name { font-size: 18px; font-weight: 700; }
+.choice-desc { font-size: 14px; line-height: 1.4; opacity: .85; }
+.add-panel { margin-top: 20px; padding: 28px; display: flex; flex-direction: column; gap: 16px; align-items: flex-start; max-width: 900px; }
+.add-panel h2 { margin: 0; font-family: var(--serif); font-size: 24px; font-weight: 400; }
+.add-panel > p { margin: 0; font-size: 16px; line-height: 1.55; color: var(--ink); }
+.add-panel.submit-form { align-items: stretch; gap: 26px; }
+.add-panel .fieldset h2 { grid-column: 1 / -1; }
+.add-panel .fieldset .hint.span-2 { grid-column: 1 / -1; margin: -6px 0 0; font-size: 13px; color: #555; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.form-actions .hint { font-size: 14px; color: #555; }
 .steps { margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 6px; font-size: 15px; line-height: 1.45; }
 .luma-menu {
-  display: flex; flex-direction: column; gap: 2px; margin: 0 0 0 22px; padding: 6px;
+  display: flex; flex-direction: column; gap: 2px; margin: 0 0 0 22px; padding: 6px; min-width: 260px;
   border-radius: 12px; background: #1f1f1f; color: #e8e8e8; font-size: 13.5px; font-weight: 500;
 }
 .luma-menu span { padding: 7px 10px; border-radius: 8px; opacity: .55; }
 .luma-menu .is-pick { opacity: 1; background: #3a3a3a; color: #fff; box-shadow: inset 0 0 0 2px var(--coral); }
-.choice-btn { margin-top: auto; align-self: flex-start; }
 .add-notes { margin-top: 28px; max-width: 900px; display: flex; flex-direction: column; gap: 10px; font-size: 16px; line-height: 1.5; color: var(--ink); }
 .add-notes p { margin: 0; }
+@media (max-width: 760px) {
+  .choices { grid-template-columns: 1fr; gap: 10px; }
+  .add-panel { padding: 22px 18px; }
+  .add-panel .btn-large { align-self: stretch; }
+}
 @media (max-width: 640px) {
-  .choose-title { margin-top: 24px; font-size: 22px; }
-  .choice { padding: 22px 20px 20px; }
-  .choice-btn { align-self: stretch; }
+  .choose-title { font-size: 22px; }
 }
 
 /* ---------- Submit page ---------- */

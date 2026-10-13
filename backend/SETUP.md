@@ -13,7 +13,8 @@ Plan on about 30–45 minutes the first time. You need a free Cloudflare account
 ```
 GitHub Pages (the website)                       Cloudflare
  ├─ index.html  ── reads events ──────────────▶  Worker  /api/events
- ├─ submit.html ── sends submissions ─────────▶  Worker  /api/submissions  (checks Turnstile, duplicates, rate limit)
+ ├─ add.html ──── "Add An Event" forms ───────▶  Worker  /api/luma-submissions ──▶ queue ──▶ Luma bot ──▶ ATIH calendar on Luma
+ ├─ submit.html ── (older form, not linked) ──▶  Worker  /api/submissions
  └─ "Subscribe" buttons ──────────────────────▶  Worker  /calendars/all.ics, philly.ics, dc.ics …
                                                     │
  You + community leads ── sign in via Access ──▶  Worker  /admin  (review page)
@@ -140,6 +141,73 @@ From now on you can add and remove leads, and add new communities, on the review
 
 ---
 
+## 9. Sending events to Luma (the Luma bot)
+
+The **Add An Event** page (`add.html`) offers three choices:
+
+| Choice | What happens |
+|---|---|
+| A new Luma event | Opens Luma's create page, already set to the All Tech Is Human calendar. Nothing to set up. |
+| An existing Luma event | Our form → the queue → the Luma bot submits it with **Submit Event → Submit Existing Luma Event**. |
+| A non-Luma event | Our form → the queue → the Luma bot submits it with **Submit Event → Submit External Event**. |
+
+Luma's admins accept or decline submissions as usual. Accepted in-person DMV and Philadelphia events reach our calendar through the hourly Luma sync (`scripts/sync_luma.py`).
+
+**How the bot works:** every 2 minutes, if anything is waiting, the Worker starts a headless Chrome through Cloudflare **Browser Rendering**. It opens the ATIH calendar on Luma, signed in as the community's own Luma account, and fills in Luma's form the way a person would. The code is in `src/luma-bot.js`. It uses no browser time when the queue is empty.
+
+**Before you start:** read Luma's terms of service (luma.com/terms) to make sure automated submissions from your account are OK. Also tell ATIH's calendar admins that submissions from this account come from the community site.
+
+### 9a. Create the bot's Luma account
+
+1. Make an email address just for this, e.g. a new Gmail like `atihx.community.calendar@gmail.com`.
+2. Sign up at luma.com with it and name the account **ATIHx Community Calendar**, so ATIH's admins know where submissions come from.
+3. Use a separate Chrome profile for it (Chrome menu → Profiles → Add), so you stay signed in to your own Luma account elsewhere.
+
+### 9b. Give the bot its sign-in
+
+Luma signs people in with an emailed code, so the bot can't sign itself in. Instead, it reuses the sign-in from your browser:
+
+1. In the bot's Chrome profile, sign in at **luma.com** with the bot account.
+2. Open Chrome's developer tools: **View → Developer → Developer Tools**.
+3. Go to the **Application** tab → **Cookies** → `https://luma.com`.
+4. Find the cookie named **`luma.auth-session-key`** and copy its **Value** (double-click the value, then Cmd+C).
+   - If there's no cookie with that name, look for one with "auth" and "session" in its name. Put its name in `LUMA_COOKIE_NAME` in `wrangler.toml`.
+5. In Terminal, from the `backend` folder:
+   ```
+   npx wrangler secret put LUMA_SESSION
+   ```
+   and paste the value when asked.
+6. **Don't click "Sign out"** in that Chrome profile, because that ends the session the bot is using. Just close the window.
+
+Treat this value like a password: it gives full access to the bot's Luma account. Never put it in a file or a chat.
+
+### 9c. Turn it on
+
+From the `backend` folder:
+
+```
+npm install                 # adds @cloudflare/puppeteer for the bot
+npm run db:init             # adds the new tables (safe to re-run)
+npm run deploy
+```
+
+`wrangler.toml` already contains the Browser Rendering connection (`browser = { binding = "BROWSER" }`) and the every-2-minutes schedule (`[triggers]`). Make sure `apiBase` and `turnstileSiteKey` are filled in in `js/config.js` (steps 3 and 8). Until then, the Add An Event page shows step-by-step Luma instructions instead of the forms.
+
+### 9d. Try it
+
+1. On the site, choose **An existing Luma event** and paste the link to an event you host on Luma.
+2. On the review page (`/admin/`), the **Sent to Luma** panel shows it as *Waiting to send*. Within about 2 minutes it changes to *Sent to Luma*, or click **Run the bot now**.
+3. Ask an ATIH calendar admin to confirm it arrived in their submissions.
+
+### Keeping it running
+
+- **Signed out:** Luma sign-ins eventually expire. When that happens, the bot stops and parks everything as *Waiting for sign-in*, and the panel turns red. Repeat step 9b to paste a fresh value, then click **Retry waiting and failed**. Nothing is lost.
+- **Errors:** if Luma rejects something (a bad link, or an event that was already submitted), the bot tries 3 times, then marks it *Couldn't send* with the reason and the submitter's email so you can follow up.
+- **When Luma changes its page:** the error names the step that failed (e.g. *couldn't pick the menu option: "Submit External Event" not found*). Update the matching step in `src/luma-bot.js`, then run `npm run test:bot`, which drives a real browser against a stand-in Luma page (`test/mock-luma.html`). Update the stand-in to match Luma's new page too.
+- **Free plan limits:** Browser Rendering's free plan allows 10 minutes of browser time a day. At roughly 20–30 seconds per event, that's about 20 events a day. Beyond that, the $5/month Workers Paid plan removes the daily cap. Events past the limit just wait until the next day.
+
+---
+
 ## Everyday use
 
 - **Review page:** `https://<your-worker>/admin/`. Send this link to your community leads; it works on a phone too. Each event shows a **details check**: date and time, location, hosts and sponsors, and description are required, and the registration link is optional. From there a lead can **Approve and publish**, **Fix details** themselves, **Ask submitter** (opens an email listing exactly what's missing) or **Decline** with a quick reason. Publishing an event with missing details asks for confirmation first. Tabs show *To review*, *Published* and *Declined*. Admins can also delete events, manage reviewers and add communities.
@@ -168,11 +236,11 @@ node --experimental-sqlite test/dev-server.mjs
 
 This does the same on port 8787 using a local SQLite file.
 
-**Tests:** `npm test` runs 26 checks covering submissions, duplicates, rate limiting, lead permissions and Access sign-in verification.
+**Tests:** `npm test` runs 27 checks covering submissions, duplicates, rate limiting, lead permissions and Access sign-in verification. `npm run test:bot` runs the Luma bot end to end in a real browser against a stand-in Luma page (needs Playwright: `npx playwright install chromium` the first time).
 
 ## Costs
 
-Cloudflare's free tiers for Workers, D1, Turnstile and Zero Trust (up to 50 users) have so far covered a project this size comfortably. Check current limits on Cloudflare's pricing pages before launch.
+Cloudflare's free tiers for Workers, D1, Turnstile and Zero Trust (up to 50 users) have so far covered a project this size comfortably. The Luma bot's Browser Rendering is free up to 10 browser-minutes a day (about 20 events); the $5/month Workers Paid plan lifts that. Check current limits on Cloudflare's pricing pages before launch.
 
 ## Ideas for later
 

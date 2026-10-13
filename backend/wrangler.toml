@@ -4,6 +4,10 @@
 name = "atih-community-cal"
 main = "src/index.js"
 compatibility_date = "2025-09-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Headless Chrome for the Luma bot (Cloudflare Browser Rendering).
+browser = { binding = "BROWSER" }
 
 # Serves the review page at /admin from ./public
 [assets]
@@ -32,9 +36,20 @@ ALLOWED_ORIGINS = "https://YOUR-USERNAME.github.io,http://localhost:8000"
 ACCESS_TEAM_DOMAIN = "https://YOUR-TEAM.cloudflareaccess.com"
 ACCESS_AUD = "PASTE-YOUR-ACCESS-AUD-TAG-HERE"
 
+# The Luma calendar the bot submits to, and the name of Luma's sign-in cookie.
+LUMA_CALENDAR_URL = "https://luma.com/AllTechIsHuman"
+LUMA_COOKIE_NAME = "luma.auth-session-key"
+
+# The Luma bot (see SETUP.md, "Sending events to Luma").
+# Every 2 minutes it submits any queued events to Luma. It does nothing
+# (and uses no browser time) when the queue is empty.
+[triggers]
+crons = ["*/2 * * * *"]
+
 # Secrets: set these with `npx wrangler secret put NAME`, never in this file.
 #   TURNSTILE_SECRET   from Cloudflare Turnstile
 #   IP_HASH_SALT       any long random string
+#   LUMA_SESSION       the Luma bot account's sign-in cookie (SETUP.md explains how to copy it)
 
 # Local development: `npx wrangler dev` reads .dev.vars, which overrides the
 # values above (see .dev.vars.example).

@@ -79,3 +79,33 @@ CREATE INDEX IF NOT EXISTS submission_log_by_ip ON submission_log (ip_hash, crea
 INSERT OR IGNORE INTO communities (id, name, short, color, search) VALUES
   ('dc',     'Washington, D.C.', 'DC',     '#ff5c5c', 'dc washington district of columbia'),
   ('philly', 'Philadelphia, PA', 'Philly', '#2cb4fc', 'philly philadelphia pennsylvania pa');
+
+-- Events visitors send through the site to the All Tech Is Human calendar on
+-- Luma. A scheduled job ("the Luma bot") opens Luma in a headless browser,
+-- signed in as the community's Luma account, and submits each one using
+-- Luma's own Submit Event form. Luma's admins then accept or decline it there.
+CREATE TABLE IF NOT EXISTS luma_queue (
+  id               TEXT PRIMARY KEY,
+  kind             TEXT NOT NULL CHECK (kind IN ('existing', 'external')),
+  event_url        TEXT NOT NULL,             -- Luma link, or the external event page
+  payload          TEXT NOT NULL DEFAULT '{}',-- JSON: name, host, location, date, endDate, startTime, endTime
+  submitter_name   TEXT NOT NULL DEFAULT '',
+  submitter_email  TEXT NOT NULL DEFAULT '',  -- private, only shown to admins
+  status           TEXT NOT NULL DEFAULT 'queued'
+                   CHECK (status IN ('queued', 'working', 'submitted', 'failed', 'needs_login')),
+  attempts         INTEGER NOT NULL DEFAULT 0,
+  last_error       TEXT NOT NULL DEFAULT '',
+  created_at       TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now')),
+  updated_at       TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now')),
+  submitted_at     TEXT
+);
+CREATE INDEX IF NOT EXISTS luma_queue_by_status ON luma_queue (status, created_at);
+CREATE INDEX IF NOT EXISTS luma_queue_by_url ON luma_queue (event_url);
+
+-- A few facts about the Luma bot for the review page: last run, last success,
+-- whether its Luma sign-in still works, and the last problem it hit.
+CREATE TABLE IF NOT EXISTS bot_status (
+  key         TEXT PRIMARY KEY,
+  value       TEXT NOT NULL DEFAULT '',
+  updated_at  TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%SZ', 'now'))
+);

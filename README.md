@@ -8,9 +8,9 @@ A community-built project from the ATIHx Philadelphia and Washington, D.C. commu
 
 There are two ways, and both end up on the same calendar and in the same subscribed feeds.
 
-**1. Automatically, from Luma.** Every "Add An Event" button opens `add.html`, which asks where the event lives and sends people to the right place on the All Tech Is Human calendar on Luma (https://luma.com/AllTechIsHuman):
+**1. Automatically, from Luma.** Every "Add An Event" button opens `add.html`, where people choose where their event lives:
 - **A new Luma event:** goes straight to Luma's create page, already set to submit to the ATIH calendar.
-- **An existing Luma event, or a non-Luma event (Eventbrite, etc.):** opens the ATIH calendar on Luma, with a picture of which **Submit Event** menu item to choose. Luma has no direct link to those two options.
+- **An existing Luma event** or **a non-Luma event** (Eventbrite, etc.): a short form on our site. The Luma bot in `backend/` then submits it to the ATIH calendar using Luma's own **Submit Event** form, so people never have to find that menu. Setup is in `backend/SETUP.md`, step 9. Until the backend is live, these two choices show step-by-step Luma instructions instead.
 
 Once the calendar's admins accept an event, it appears here within about an hour. No API key is needed:
 
@@ -35,11 +35,13 @@ Synced events are marked `"synced": true`. If you rewrite one's host or descript
 
 ```
 index.html            The calendar
-submit.html           Submit-an-event form
+add.html              Add An Event (choose new / existing Luma / non-Luma event)
+submit.html           Older submit form (kept, not linked)
 css/styles.css        All styling
 js/config.js          ← Backend address + Turnstile key (fill in after setup)
 js/app.js             Calendar, community filter, subscribe panel, photo slideshow
-js/submit.js          Submit form logic
+js/add.js             Add An Event page logic
+js/submit.js          Older submit form logic (submit.html, not linked)
 assets/img/           Logo and slideshow photos
 .nojekyll             Tells GitHub Pages to serve the files as-is
 

@@ -8,9 +8,14 @@
     "deploy": "wrangler deploy",
     "db:init:local": "wrangler d1 execute atih-community-cal --local --file=schema.sql",
     "db:init": "wrangler d1 execute atih-community-cal --remote --file=schema.sql",
-    "test": "node --experimental-sqlite --no-warnings test/run-tests.mjs"
+    "test": "node --experimental-sqlite --no-warnings test/run-tests.mjs",
+    "test:bot": "node --experimental-sqlite --no-warnings test/bot-test.mjs"
   },
   "devDependencies": {
-    "wrangler": "^3.114.0"
+    "wrangler": "^3.114.0",
+    "playwright": "^1.48.0"
+  },
+  "dependencies": {
+    "@cloudflare/puppeteer": "^1.4.0"
   }
 }

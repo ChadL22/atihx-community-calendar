@@ -44,65 +44,137 @@
 <main class="wrap main">
   <section class="intro">
     <h1>Add An Event</h1>
-    <p class="lead">Events are submitted to All Tech Is Human's calendar on Luma. Once it's accepted there, a DMV or Philadelphia event appears here automatically, usually within an hour.</p>
+    <p class="lead">Events go to All Tech Is Human’s calendar on Luma. Once Luma’s admins accept an in-person DMV or Philadelphia event, it appears here automatically, usually within an hour.</p>
   </section>
 
-  <h2 class="choose-title">Where does your event live?</h2>
-  <div class="choices">
-
-    <section class="panel choice" aria-labelledby="new-title">
+  <fieldset class="choices" id="choices">
+    <legend class="choose-title">Where does your event live?</legend>
+    <label class="choice-card">
+      <input type="radio" name="kind" value="new">
       <span class="choice-num" aria-hidden="true">1</span>
-      <h3 id="new-title">A new Luma event</h3>
-      <p>Haven't created it anywhere yet? Create it on Luma and it's submitted to the All Tech Is Human calendar for you.</p>
-      <ol class="steps">
-        <li>Sign in to Luma and fill in your event details.</li>
-        <li>Publish. It goes to the calendar admins for review.</li>
-      </ol>
-      <a class="btn btn-dark choice-btn" href="https://luma.com/create?calendar=cal-tp9fJuQNa1rcyNN">Create on Luma ↗</a>
-    </section>
-
-    <section class="panel choice" aria-labelledby="existing-title">
+      <span class="choice-name">A new Luma event</span>
+      <span class="choice-desc">Not created anywhere yet.</span>
+    </label>
+    <label class="choice-card">
+      <input type="radio" name="kind" value="existing">
       <span class="choice-num" aria-hidden="true">2</span>
-      <h3 id="existing-title">An existing Luma event</h3>
-      <p>Already on Luma, under your own account or another calendar? Submit it to ours.</p>
-      <ol class="steps">
-        <li>Open the All Tech Is Human calendar on Luma.</li>
-        <li>Click <strong>Submit Event</strong>, then choose:</li>
-      </ol>
-      <div class="luma-menu" aria-hidden="true">
-        <span>＋ Create New Event</span>
-        <span class="is-pick">✦ Submit Existing Luma Event</span>
-        <span>🔗 Submit External Event</span>
-      </div>
-      <ol class="steps" start="3">
-        <li>Pick your event from the list.</li>
-      </ol>
-      <a class="btn btn-dark choice-btn" href="https://luma.com/AllTechIsHuman">Open the ATIH calendar ↗</a>
-    </section>
-
-    <section class="panel choice" aria-labelledby="external-title">
+      <span class="choice-name">An existing Luma event</span>
+      <span class="choice-desc">Already on Luma, under any account.</span>
+    </label>
+    <label class="choice-card">
+      <input type="radio" name="kind" value="external">
       <span class="choice-num" aria-hidden="true">3</span>
-      <h3 id="external-title">A non-Luma event</h3>
-      <p>On Eventbrite, Meetup, a university or organization page? You can still submit it through Luma.</p>
-      <ol class="steps">
-        <li>Open the All Tech Is Human calendar on Luma.</li>
-        <li>Click <strong>Submit Event</strong>, then choose:</li>
-      </ol>
-      <div class="luma-menu" aria-hidden="true">
-        <span>＋ Create New Event</span>
-        <span>✦ Submit Existing Luma Event</span>
-        <span class="is-pick">🔗 Submit External Event</span>
+      <span class="choice-name">A non-Luma event</span>
+      <span class="choice-desc">On Eventbrite, Meetup, a university or organization page.</span>
+    </label>
+  </fieldset>
+
+  <!-- 1. New Luma event: straight to Luma's create page, already set to our calendar. -->
+  <section class="panel add-panel" id="panel-new" hidden>
+    <h2>Create it on Luma</h2>
+    <p>Luma opens its create page already set to submit to the All Tech Is Human calendar. Sign in, fill in your event and publish. It goes to the calendar’s admins for review.</p>
+    <a class="btn btn-dark btn-large" href="https://luma.com/create?calendar=cal-tp9fJuQNa1rcyNN">Create on Luma ↗</a>
+  </section>
+
+  <!-- 2 and 3. Our form; the Luma bot submits it to the ATIH calendar for you. -->
+  <form class="panel add-panel submit-form" id="luma-form" novalidate hidden>
+    <div class="fieldset" data-kind="existing">
+      <h2 class="span-2">Your Luma event</h2>
+      <label class="form-field span-2" data-field="url">
+        <span>Luma event link</span>
+        <input name="url" type="url" inputmode="url" maxlength="500" placeholder="https://luma.com/abc123">
+        <span class="hint">Open your event on Luma and copy the address from your browser.</span>
+      </label>
+    </div>
+
+    <div class="fieldset" data-kind="external">
+      <h2 class="span-2">Your event</h2>
+      <label class="form-field span-2" data-field="url">
+        <span>Event page link</span>
+        <input name="url" type="url" inputmode="url" maxlength="500" placeholder="https://www.eventbrite.com/e/some-event">
+      </label>
+      <label class="form-field span-2" data-field="name">
+        <span>Event name</span>
+        <input name="name" maxlength="140" placeholder="e.g. Responsible AI Happy Hour">
+      </label>
+      <label class="form-field span-2" data-field="location">
+        <span>Address</span>
+        <input name="location" maxlength="200" autocomplete="off" placeholder="e.g. 400 8th St NW, Washington, DC">
+        <span class="hint">Street address and city. Only in-person events in the DMV or the Philadelphia area appear on this calendar.</span>
+      </label>
+      <label class="form-field span-2" data-field="host">
+        <span>Host <span class="optional">(optional)</span></span>
+        <input name="host" maxlength="200" placeholder="e.g. ATIHx DC with Code for DC">
+      </label>
+      <label class="form-field" data-field="date">
+        <span>Date</span>
+        <input name="date" type="date">
+      </label>
+      <div class="form-row">
+        <label class="form-field" data-field="startTime">
+          <span>Starts</span>
+          <input name="startTime" type="time" value="18:00">
+        </label>
+        <label class="form-field" data-field="endTime">
+          <span>Ends</span>
+          <input name="endTime" type="time" value="20:00">
+        </label>
       </div>
-      <ol class="steps" start="3">
-        <li>Paste the event's link and add the date, time and location.</li>
-      </ol>
-      <a class="btn btn-dark choice-btn" href="https://luma.com/AllTechIsHuman">Open the ATIH calendar ↗</a>
-    </section>
-  </div>
+      <p class="hint span-2">Times are Eastern Time.</p>
+    </div>
+
+    <div class="fieldset">
+      <h2 class="span-2">About you</h2>
+      <label class="form-field" data-field="submitterName">
+        <span>Your name</span>
+        <input name="submitterName" maxlength="100" autocomplete="name">
+      </label>
+      <label class="form-field" data-field="submitterEmail">
+        <span>Your email</span>
+        <input name="submitterEmail" type="email" maxlength="200" autocomplete="email">
+        <span class="hint">Only our community admins see this, in case there’s a question.</span>
+      </label>
+    </div>
+
+    <div class="hp" aria-hidden="true"><label>Leave this empty<input name="website" tabindex="-1" autocomplete="off"></label></div>
+    <div id="turnstile"></div>
+    <div class="form-message is-error" id="form-error" role="alert" tabindex="-1" hidden></div>
+    <div class="form-actions">
+      <button type="submit" class="btn btn-dark btn-large" id="send-button">Send to Luma</button>
+      <span class="hint">We submit it to All Tech Is Human’s Luma calendar for you.</span>
+    </div>
+  </form>
+
+  <!-- Shown instead of the form until the backend is connected (js/config.js). -->
+  <section class="panel add-panel" id="panel-manual" hidden>
+    <h2>Submit it on Luma</h2>
+    <ol class="steps">
+      <li>Open the All Tech Is Human calendar on Luma.</li>
+      <li>Click <strong>Submit Event</strong>, then choose:</li>
+    </ol>
+    <div class="luma-menu" aria-hidden="true">
+      <span>＋ Create New Event</span>
+      <span data-manual="existing">✦ Submit Existing Luma Event</span>
+      <span data-manual="external">🔗 Submit External Event</span>
+    </div>
+    <ol class="steps" start="3">
+      <li id="manual-step3">Paste your event’s link and submit.</li>
+    </ol>
+    <a class="btn btn-dark btn-large" href="https://luma.com/AllTechIsHuman">Open the ATIH calendar ↗</a>
+  </section>
+
+  <section class="panel add-panel success" id="success" hidden tabindex="-1">
+    <h2>Thanks! It’s on its way to Luma.</h2>
+    <p id="success-message">We’re submitting your event to All Tech Is Human’s calendar on Luma now. Once Luma’s admins accept it, it will appear on this calendar automatically.</p>
+    <div class="form-actions">
+      <a class="btn btn-dark" href="./">Back to the calendar</a>
+      <button type="button" class="btn btn-outline" id="add-another">Add another event</button>
+    </div>
+  </section>
 
   <div class="add-notes">
     <p><strong>Location matters.</strong> Only events held in person in the DMV (DC, suburban Maryland and Northern Virginia) or the Philadelphia area appear on this calendar. Online events are not included.</p>
-    <p><strong>Rather not use Luma?</strong> Share your event in your community's channel in <a class="ulink strong" href="https://all-tech-is-human.slack.com/">ATIH's Slack</a> and a community lead can add it.</p>
+    <p><strong>Rather not use Luma?</strong> Share your event in your community’s channel in <a class="ulink strong" href="https://all-tech-is-human.slack.com/">ATIH’s Slack</a> and a community lead can add it.</p>
   </div>
 </main>
 
@@ -118,5 +190,7 @@
 </footer>
 
 <script src="js/nav.js"></script>
+<script src="js/config.js"></script>
+<script src="js/add.js"></script>
 </body>
 </html>

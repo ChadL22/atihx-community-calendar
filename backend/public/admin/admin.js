@@ -389,6 +389,60 @@
       });
     });
     loadModerators();
+    setupLuma();
+  }
+
+
+  /* ---------- Sent to Luma ---------- */
+  var LUMA_LABELS = { queued: 'Waiting to send', working: 'Sending now', submitted: 'Sent to Luma', failed: 'Couldn’t send', needs_login: 'Waiting for sign-in' };
+  function loadLuma() {
+    return api('GET', '/api/admin/luma-queue').then(function (data) {
+      var st = data.status || {};
+      var box = $('luma-status');
+      var lines = [];
+      var bad = false;
+      if (!data.hasBrowser) { lines.push('The Browser Rendering connection isn’t set up yet (see SETUP.md).'); bad = true; }
+      if (!data.hasSession) { lines.push('The bot isn’t signed in to Luma yet. Add LUMA_SESSION (see SETUP.md).'); bad = true; }
+      if (st.signed_in === 'no') { lines.push('<strong>Luma signed the bot out.</strong> Copy a fresh sign-in cookie into LUMA_SESSION (SETUP.md, “Refresh the Luma sign-in”), then click “Retry waiting and failed”.'); bad = true; }
+      if (st.last_success) lines.push('Last event sent: ' + since(st.last_success) + '.');
+      if (st.last_run) lines.push('Bot last ran ' + since(st.last_run) + '.');
+      if (st.last_problem && bad) lines.push('Last problem: ' + esc(st.last_problem));
+      if (!lines.length) lines.push('Ready. Nothing has been sent yet.');
+      box.innerHTML = lines.join('<br>');
+      box.className = 'luma-status ' + (bad ? 'is-bad' : 'is-ok');
+
+      $('luma-queue').innerHTML = data.items.length ? data.items.map(function (it) {
+        var p = it.payload || {};
+        var title = it.kind === 'external' ? (p.name || it.event_url) : it.event_url;
+        var when = it.kind === 'external' && p.date ? prettyDate(p.date) + ', ' + prettyTime(p.startTime) + ' · ' + esc(p.location || '') : 'Existing Luma event';
+        return '<div class="row luma-row"><div>' +
+          '<strong>' + esc(title) + '</strong> <span class="pill-status ' + esc(it.status) + '">' + esc(LUMA_LABELS[it.status] || it.status) + '</span>' +
+          '<div class="meta">' + when + '</div>' +
+          '<div class="meta">From ' + esc(it.submitter_name) + ' (<a class="ulink" href="mailto:' + esc(it.submitter_email) + '">' + esc(it.submitter_email) + '</a>) · ' + since(it.created_at) +
+          ' · <a class="ulink" href="' + esc(it.event_url) + '" target="_blank" rel="noopener">event page ↗</a></div>' +
+          (it.last_error && it.status !== 'submitted' ? '<div class="err">' + esc(it.last_error) + '</div>' : '') +
+          '</div>' +
+          (it.status === 'failed' || it.status === 'needs_login' ? '<button type="button" class="link-btn" data-luma-retry="' + esc(it.id) + '">Retry</button>' : '<span></span>') +
+          '</div>';
+      }).join('') : '<div class="row">Nothing has been sent from the site yet.</div>';
+    }).catch(function (err) { $('luma-status').textContent = err.message; });
+  }
+
+  function setupLuma() {
+    $('luma-run').addEventListener('click', function () {
+      api('POST', '/api/admin/luma-queue/run').then(function (d) { flash(d.message); setTimeout(loadLuma, 45000); }).catch(function (err) { flash(err.message, true); });
+    });
+    $('luma-retry-all').addEventListener('click', function () {
+      api('POST', '/api/admin/luma-queue/retry-waiting').then(function (d) { flash(d.requeued + ' event(s) will be sent again within a few minutes.'); loadLuma(); }).catch(function (err) { flash(err.message, true); });
+    });
+    $('luma-queue').addEventListener('click', function (e) {
+      var btn = e.target.closest('[data-luma-retry]');
+      if (!btn) return;
+      api('POST', '/api/admin/luma-queue/' + encodeURIComponent(btn.getAttribute('data-luma-retry')) + '/retry')
+        .then(function () { flash('It will be sent again within a few minutes.'); loadLuma(); })
+        .catch(function (err) { flash(err.message, true); });
+    });
+    loadLuma();
   }
 
   /* ---------- start ---------- */

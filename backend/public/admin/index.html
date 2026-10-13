@@ -61,6 +61,15 @@
     <div id="list" class="list"></div>
 
     <section id="admin-tools" class="admin-tools" hidden>
+      <h2>Sent to Luma</h2>
+      <p class="muted">Events people add on the site go to All Tech Is Human’s calendar on Luma. The Luma bot submits them every couple of minutes, and Luma’s admins accept or decline them there. Accepted DMV and Philadelphia events then show up on the calendar within the hour.</p>
+      <div id="luma-status" class="luma-status"></div>
+      <div class="luma-actions">
+        <button type="button" class="btn btn-outline" id="luma-run">Run the bot now</button>
+        <button type="button" class="btn btn-outline" id="luma-retry-all">Retry waiting and failed</button>
+      </div>
+      <div id="luma-queue" class="table"></div>
+
       <h2>Moderators</h2>
       <p class="muted">Admins review every community and manage this list. Community leads review only their own city. Use the email each person signs in with.</p>
       <div id="moderators" class="table"></div>

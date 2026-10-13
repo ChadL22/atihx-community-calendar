@@ -6,6 +6,7 @@
 //   GET  /api/events                 { communities, events } (approved only)
 //   GET  /calendars/<slug>.ics       subscribable feed: all, philly, dc, dc+philly…
 //   POST /api/submissions            submit an event (Turnstile protected)
+//   POST /api/luma-submissions       send an event to the ATIH calendar on Luma (see luma-queue.js)
 //
 // Moderators (behind Cloudflare Access)
 //   GET    /api/admin/me
@@ -17,12 +18,20 @@
 //   POST   /api/admin/moderators          admins only { email, role, community }
 //   DELETE /api/admin/moderators          admins only { email, community }
 //   POST   /api/admin/communities         admins only { id, name, short, color, search }
+//   GET    /api/admin/luma-queue          admins only: events sent to Luma, bot status
+//   POST   /api/admin/luma-queue/...      admins only: retry, retry-waiting, run
+//
+// Scheduled (every 2 minutes, see wrangler.toml): the Luma bot submits queued events.
 //
 // Anything else falls through to the static files in ./public (the review page).
 
 import { buildIcs } from './ics.js';
 import { getAccessEmail } from './access.js';
 import { validateEvent, dedupeKey } from './validate.js';
+import { postLumaSubmission, processQueue, handleLumaAdmin } from './luma-queue.js';
+
+// Loaded only when the bot runs, so tests and local dev don't need the package.
+const launchBrowser = async (env) => (await import('./browser.js')).launchBrowser(env);
 
 const SUBMISSIONS_PER_HOUR = 5;
 
@@ -503,7 +512,7 @@ async function adminAddCommunity(request, env, mod) {
   return res.meta.changes ? json({ ok: true }, 201) : json({ error: 'duplicate', message: 'That community id already exists.' }, 409);
 }
 
-async function handleAdmin(request, env, url) {
+async function handleAdmin(request, env, url, ctx) {
   const mod = await getModerator(request, env);
   if (!mod) return json({ error: 'unauthorized', message: 'Sign in through Cloudflare Access.' }, 401);
   const path = url.pathname.replace(/^\/api\/admin/, '');
@@ -532,14 +541,17 @@ async function handleAdmin(request, env, url) {
 
   if (path === '/moderators') return adminModerators(request, env, mod);
   if (path === '/communities' && request.method === 'POST') return adminAddCommunity(request, env, mod);
+  if (path.startsWith('/luma-queue')) return handleLumaAdmin(request, env, ctx, path, mod, helpers, env.LAUNCH_BROWSER || launchBrowser);
 
   return json({ error: 'not_found' }, 404);
 }
 
 /* ------------------------------------------------------------------- router */
 
+const helpers = { json, allowedOrigins, readJson, verifyTurnstile, sha256Hex, todayIn };
+
 export default {
-  async fetch(request, env) {
+  async fetch(request, env, ctx) {
     const url = new URL(request.url);
     const { pathname } = url;
 
@@ -582,8 +594,15 @@ export default {
         return new Response(res.body, { status: res.status, headers });
       }
 
+      if (pathname === '/api/luma-submissions' && request.method === 'POST') {
+        const res = await postLumaSubmission(request, env, helpers);
+        const headers = new Headers(res.headers);
+        Object.entries(corsHeaders(request, env)).forEach(([k, v]) => headers.set(k, v));
+        return new Response(res.body, { status: res.status, headers });
+      }
+
       if (pathname.startsWith('/api/admin/')) {
-        const res = await handleAdmin(request, env, url);
+        const res = await handleAdmin(request, env, url, ctx);
         res.headers.set('Cache-Control', 'no-store');
         return res;
       }
@@ -596,5 +615,14 @@ export default {
       console.error(err);
       return json({ error: 'server_error', message: 'Something went wrong. Please try again.' }, 500);
     }
+  },
+
+  // Cron trigger: let the Luma bot work through the queue.
+  async scheduled(event, env, ctx) {
+    ctx.waitUntil(
+      processQueue(env, env.LAUNCH_BROWSER || launchBrowser).then((r) => {
+        if (r.processed) console.log('Luma bot:', JSON.stringify(r));
+      })
+    );
   },
 };
