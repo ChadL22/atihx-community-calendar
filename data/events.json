@@ -1,19 +1,55 @@
 {
-  "_readme": "Edit this file, then run: python3 scripts/build.py. Events copied from Luma keep their Luma link in 'url'.",
+  "_readme": "Events from the All Tech Is Human Luma calendar are added automatically every hour by scripts/sync_luma.py (marked \"synced\": true). Add other events by hand here, then run: python3 scripts/build.py.",
+  "luma": {
+    "calendar_api_id": "cal-tp9fJuQNa1rcyNN",
+    "calendar_url": "https://luma.com/AllTechIsHuman"
+  },
   "communities": [
     {
       "id": "dc",
       "name": "Washington, D.C.",
       "short": "DC",
       "color": "#ff5c5c",
-      "search": "dc washington district of columbia"
+      "search": "dc washington district of columbia",
+      "luma": {
+        "center": {
+          "lat": 38.9072,
+          "lng": -77.0369
+        },
+        "radius_km": 40,
+        "places": [
+          {
+            "city": "Washington",
+            "regions": [
+              "DC",
+              "District of Columbia"
+            ]
+          }
+        ]
+      }
     },
     {
       "id": "philly",
       "name": "Philadelphia, PA",
       "short": "Philly",
       "color": "#2cb4fc",
-      "search": "philly philadelphia pennsylvania pa"
+      "search": "philly philadelphia pennsylvania pa",
+      "luma": {
+        "center": {
+          "lat": 39.9526,
+          "lng": -75.1652
+        },
+        "radius_km": 40,
+        "places": [
+          {
+            "city": "Philadelphia",
+            "regions": [
+              "PA",
+              "Pennsylvania"
+            ]
+          }
+        ]
+      }
     }
   ],
   "events": [

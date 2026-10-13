@@ -1,0 +1,46 @@
+# Every hour, pull accepted DC and Philadelphia events from the
+# All Tech Is Human calendar on Luma and publish them on this site.
+# Run it on demand from the repo's Actions tab: "Sync events from Luma" → "Run workflow".
+name: Sync events from Luma
+
+on:
+  schedule:
+    - cron: "17 * * * *"   # every hour, at 17 minutes past
+  workflow_dispatch:
+
+permissions:
+  contents: write   # commit the updated event files
+  pages: write      # ask GitHub Pages to republish
+
+concurrency:
+  group: sync-luma
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Pull events from Luma
+        run: python3 scripts/sync_luma.py
+
+      - name: Commit and publish changes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if git diff --quiet; then
+            echo "No new or changed events."
+            exit 0
+          fi
+          git config user.name "luma-sync"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data calendars
+          git commit -m "Sync events from Luma"
+          git push
+          # Make sure GitHub Pages rebuilds with the new events.
+          gh api -X POST "repos/${GITHUB_REPOSITORY}/pages/builds" >/dev/null || echo "Pages will pick up the change on its next build."

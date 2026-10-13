@@ -6,11 +6,25 @@ A community-built project from the ATIHx Philadelphia and Washington, D.C. commu
 
 ## How events get on the calendar
 
-Every "Add An Event" button sends people to the All Tech Is Human calendar on Luma (https://luma.com/AllTechIsHuman), where the **Submit Event** button lets them create a new event, submit an existing Luma event, or submit an external one (Eventbrite, etc.). Once an event is accepted on Luma, add it to `data/events.json` (see below).
+There are two ways, and both end up on the same calendar and in the same subscribed feeds.
 
-`submit.html` and the Cloudflare backend are kept for later but aren't linked from the site right now. With the backend, submissions go to a small Cloudflare backend (in `backend/`) that blocks bots, catches duplicates and holds each event for a community lead to approve. Approved events appear on the calendar and in everyone's subscribed calendars automatically.
+**1. Automatically, from Luma.** Every "Add An Event" button sends people to the All Tech Is Human calendar on Luma (https://luma.com/AllTechIsHuman). There, the **Submit Event** button lets them create a new event, submit an existing Luma event, or submit an external one (Eventbrite, etc.). Once the calendar's admins accept it, it appears here within about an hour. No API key is needed:
 
-**Setting up the backend:** follow [`backend/SETUP.md`](backend/SETUP.md). Until it's connected (`apiBase` empty in `js/config.js`), the site runs on the sample events in `data/` so you can preview everything.
+- `.github/workflows/sync-luma.yml` runs `scripts/sync_luma.py` every hour on GitHub.
+- The script reads the Luma calendar's public event list and keeps only events that physically take place in one of our communities:
+  - with map coordinates: within 40 km of the community's center (the DC area, including Arlington and Bethesda; the Philadelphia area, including King of Prussia);
+  - with a hidden, guests-only address: the city and state must match exactly (Washington, DC or Philadelphia, PA).
+- Online events and events anywhere else are skipped, whatever their title says. You can change the centers, the radius and the place names in each community's `luma` block in `data/events.json`.
+- It adds new events, refreshes ones that changed on Luma, removes ones taken down on Luma, then rebuilds the site files and publishes.
+- To run it right away, go to the repo's **Actions** tab → **Sync events from Luma** → **Run workflow**.
+
+Synced events are marked `"synced": true`. If you rewrite one's host or description by hand, your wording is kept.
+
+**2. By hand, for anything else** (events shared in Slack, Eventbrite, university pages and so on). Add them to `data/events.json` as described under "Adding events by hand" below. The Luma sync never edits or removes hand-added events. If one of them later shows up on Luma (same link, or same date and title), the hand-added version is kept and no duplicate is created.
+
+`submit.html` and the Cloudflare backend in `backend/` are kept for later but aren't linked from the site right now.
+
+**Heads-up:** the sync commits to GitHub on its own, so run `git pull` before you push your own changes.
 
 ## What's in this folder
 
@@ -30,8 +44,10 @@ backend/              Cloudflare Worker + D1 database (see backend/SETUP.md)
   schema.sql          Database tables
   test/               Automated tests and a no-install local server
 
-data/, calendars/,    Static fallback: sample events and feeds used only
-scripts/build.py      while the backend isn't connected
+data/events.json      All events (synced from Luma + added by hand)
+data/events.js,       Generated from events.json by scripts/build.py
+calendars/*.ics
+scripts/sync_luma.py  Hourly Luma sync (run by .github/workflows/sync-luma.yml)
 ```
 
 The website itself is plain HTML, CSS and JavaScript: no frameworks and no build step.
@@ -48,9 +64,7 @@ then open http://localhost:8000.
 
 The "Subscribe" buttons only work once the site is online, because Google Calendar, Apple Calendar and Outlook need a public web address to pull the feed from.
 
-## Updating the static fallback events
-
-Once the backend is live, events are managed on the review page and nothing below is needed. Until then:
+## Adding events by hand
 
 1. Open `data/events.json` and add, change or remove events. Each event looks like this:
 
@@ -83,7 +97,7 @@ Once the backend is live, events are managed on the review page and nothing belo
 
 3. Commit and push. Subscribers' calendars pick up changes the next time they refresh. Google Calendar can take up to a day; Apple and Outlook are usually faster.
 
-The events in this repo are real past events copied from All Tech Is Human's Luma calendar (marked `"source": "luma"`), each linking back to its Luma page. To add another from Luma, copy its title, date, times, venue, hosts and description into a new entry, set `url` to the Luma link, and use `luma-<the code at the end of the link>` as the `id`.
+For a Luma event that isn't on the All Tech Is Human calendar, use `luma-<the code at the end of the link>` as the `id` and the Luma link as `url`.
 
 ## Adding a community
 
