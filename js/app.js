@@ -128,7 +128,7 @@
       (byDate[iso] || []).forEach(function (e) {
         var c = BY_ID[e.community];
         var label = esc(e.title + ' · ' + c.name + ' · ' + timeRange(e) + (e.host ? ' · Hosted by ' + e.host : ''));
-        var tag = e.url ? 'a href="' + esc(e.url) + '"' : 'span';
+        var tag = e.url ? 'a href="' + esc(e.url) + '" target="_blank" rel="noopener"' : 'span';
         html += '<' + tag + ' class="chip" style="background:' + esc(c.color) + '" title="' + label + '">' + esc(e.title) + '</' + tag.split(' ')[0] + '>';
       });
       html += '</div>';
@@ -173,7 +173,7 @@
       var c = BY_ID[e.community];
       var d = new Date(Number(e.start.slice(0, 4)), Number(e.start.slice(5, 7)) - 1, Number(e.start.slice(8, 10)));
       var title = e.url
-        ? '<a class="event-title" href="' + esc(e.url) + '">' + esc(e.title) + '</a>'
+        ? '<a class="event-title" href="' + esc(e.url) + '" target="_blank" rel="noopener">' + esc(e.title) + '</a>'
         : '<div class="event-title">' + esc(e.title) + '</div>';
       var where = e.venue || 'Venue TBA';
       return '<article class="event">' +
@@ -181,6 +181,7 @@
         '<div class="event-body">' + title +
         '<div class="event-meta">' + esc(timeRange(e)) + ' · ' + esc(where) + '</div>' +
         (e.host ? '<div class="event-meta">Hosted by ' + esc(e.host) + '</div>' : '') +
+        (e.url ? '<a class="event-link" href="' + esc(e.url) + '" target="_blank" rel="noopener">' + (e.start.slice(0, 10) >= TODAY ? 'Details &amp; RSVP ↗' : 'Event page ↗') + '<span class="sr-only"> for ' + esc(e.title) + ' (opens in a new tab)</span></a>' : '') +
         '<div><span class="badge" style="background:' + esc(c.color) + '">' + esc(c.name) + '</span></div>' +
         '</div></article>';
     }).join('');

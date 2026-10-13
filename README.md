@@ -81,7 +81,7 @@ Once the backend is live, events are managed on the review page and nothing belo
 
 3. Commit and push. Subscribers' calendars pick up changes the next time they refresh. Google Calendar can take up to a day; Apple and Outlook are usually faster.
 
-The events shipped with this repo are **sample data** (marked `"sample": true`) for the mockup. Delete them before launch.
+The events in this repo are real past events copied from All Tech Is Human's Luma calendar (marked `"source": "luma"`), each linking back to its Luma page. To add another from Luma, copy its title, date, times, venue, hosts and description into a new entry, set `url` to the Luma link, and use `luma-<the code at the end of the link>` as the `id`.
 
 ## Adding a community
 
