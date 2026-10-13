@@ -139,7 +139,8 @@ window.ATIH_DATA = {
       "host": "All Tech Is Human (David Polgar)",
       "url": "https://luma.com/oab1kyzg",
       "description": "A casual Responsible Tech Mixer for people working in and around responsible technology. All Tech Is Human reserved three cabanas; food and drinks available for purchase.",
-      "source": "luma"
+      "source": "luma",
+      "synced": true
     },
     {
       "id": "luma-ubp5408a",
@@ -153,7 +154,8 @@ window.ATIH_DATA = {
       "host": "ATIHx DC (Manas Khatore)",
       "url": "https://luma.com/ubp5408a",
       "description": "An informal, independently organized happy hour to talk about improving the responsible tech field: responsible AI, tech policy, trust & safety, youth and wellbeing, and cyber and democracy. Attendees are asked to make a purchase at the venue.",
-      "source": "luma"
+      "source": "luma",
+      "synced": true
     },
     {
       "id": "luma-g5n0jr1i",
