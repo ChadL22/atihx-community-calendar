@@ -14,8 +14,9 @@ also run it yourself from the project folder:
 
 How an event is matched to a community (settings live in data/events.json,
 under each community's "luma" block). Location is the only test:
-  - With map coordinates: within radius_km of the community's center.
-  - With a hidden address: the city and state match one of its "places".
+  - Its city and state match one of its "places" (for DC that's the DMV:
+    DC plus suburban Maryland and Northern Virginia), or
+  - Luma's map location is within radius_km of the community's center.
 Online events and events anywhere else are skipped, whatever the title says.
 
 What the script changes:
@@ -33,6 +34,7 @@ If Luma can't be reached or sends something unexpected, nothing is changed.
 Uses only the Python standard library.
 """
 
+import hashlib
 import html
 import json
 import math
@@ -146,10 +148,9 @@ def match_community(event, communities):
 
     Location is the only thing that counts: online events and events elsewhere
     never match, whatever their title says.
-      - If Luma has map coordinates, the event must be within radius_km of the
-        community's center.
-      - If the address is hidden (guests-only), the city AND state must match
-        one of the community's places exactly, e.g. Philadelphia, PA.
+      - Its city AND state match one of the community's places exactly,
+        e.g. Philadelphia, PA or Arlington, VA (not Arlington, TX), or
+      - Luma has map coordinates within radius_km of the community's center.
     """
     if event.get("location_type") == "online":
         return None
@@ -164,14 +165,15 @@ def match_community(event, communities):
     region.discard("")
     for c in communities:
         rules = c.get("luma") or {}
-        center = rules.get("center")
-        if point and center:
-            if km_between(point, (center["lat"], center["lng"])) <= rules.get("radius_km", 40):
-                return c["id"]
-            continue  # coordinates say it's somewhere else: never fall back to names
+        # A listed city in the right state always counts (e.g. Leesburg, VA).
         for place in rules.get("places", []):
-            if city == place["city"].lower() and region & {r.lower() for r in place["regions"]}:
+            names = [n.lower() for n in place.get("cities", [])] + ([place["city"].lower()] if place.get("city") else [])
+            if city in names and region & {r.lower() for r in place["regions"]}:
                 return c["id"]
+        # Otherwise use the map location, when Luma has one.
+        center = rules.get("center")
+        if point and center and km_between(point, (center["lat"], center["lng"])) <= rules.get("radius_km", 40):
+            return c["id"]
     return None
 
 
@@ -206,8 +208,13 @@ def to_event(entry, community):
     tz = ev.get("timezone") or "America/New_York"
     venue, address = where(ev)
     hosts = [h.get("name") for h in entry.get("hosts") or [] if h.get("name")]
+    link = ev["url"]
+    if link.startswith("http"):  # an external event submitted to the calendar
+        event_id, url = f"luma-ext-{ev.get('api_id') or hashlib.sha1(link.encode()).hexdigest()[:12]}", link
+    else:
+        event_id, url = f"luma-{link}", f"https://luma.com/{link}"
     return {
-        "id": f"luma-{ev['url']}",
+        "id": event_id,
         "community": community,
         "title": ev["name"].strip(),
         "start": local_time(ev["start_at"], tz),
@@ -216,7 +223,7 @@ def to_event(entry, community):
         "venue": venue,
         "address": address,
         "host": ", ".join(hosts),
-        "url": f"https://luma.com/{ev['url']}",
+        "url": url,
         "description": None,  # filled in only when needed (one extra request per event)
         "source": "luma",
         "synced": True,

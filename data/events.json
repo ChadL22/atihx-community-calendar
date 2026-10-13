@@ -7,22 +7,95 @@
   "communities": [
     {
       "id": "dc",
-      "name": "Washington, D.C.",
+      "name": "Washington, D.C. (DMV)",
       "short": "DC",
       "color": "#ff5c5c",
-      "search": "dc washington district of columbia",
+      "search": "dc dmv washington district of columbia maryland virginia arlington alexandria bethesda silver spring",
       "luma": {
         "center": {
           "lat": 38.9072,
           "lng": -77.0369
         },
-        "radius_km": 40,
+        "radius_km": 50,
         "places": [
           {
             "city": "Washington",
             "regions": [
               "DC",
               "District of Columbia"
+            ]
+          },
+          {
+            "cities": [
+              "Bethesda",
+              "Silver Spring",
+              "Rockville",
+              "Gaithersburg",
+              "College Park",
+              "Hyattsville",
+              "Takoma Park",
+              "Chevy Chase",
+              "Greenbelt",
+              "Bowie",
+              "Laurel",
+              "Germantown",
+              "Potomac",
+              "Kensington",
+              "Wheaton",
+              "Oxon Hill",
+              "National Harbor",
+              "Upper Marlboro",
+              "Largo",
+              "Lanham",
+              "Riverdale Park",
+              "Mount Rainier",
+              "Bladensburg",
+              "Landover",
+              "Capitol Heights",
+              "Suitland",
+              "Columbia"
+            ],
+            "regions": [
+              "MD",
+              "Maryland"
+            ]
+          },
+          {
+            "cities": [
+              "Arlington",
+              "Alexandria",
+              "Fairfax",
+              "Falls Church",
+              "McLean",
+              "Tysons",
+              "Vienna",
+              "Reston",
+              "Herndon",
+              "Chantilly",
+              "Centreville",
+              "Manassas",
+              "Springfield",
+              "Annandale",
+              "Burke",
+              "Leesburg",
+              "Ashburn",
+              "Sterling",
+              "Dulles",
+              "Merrifield",
+              "Oakton",
+              "Great Falls",
+              "Lorton",
+              "Woodbridge",
+              "Mount Vernon",
+              "Crystal City",
+              "Rosslyn",
+              "Ballston",
+              "Clarendon",
+              "Pentagon City"
+            ],
+            "regions": [
+              "VA",
+              "Virginia"
             ]
           }
         ]

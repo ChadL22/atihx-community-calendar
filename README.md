@@ -8,12 +8,17 @@ A community-built project from the ATIHx Philadelphia and Washington, D.C. commu
 
 There are two ways, and both end up on the same calendar and in the same subscribed feeds.
 
-**1. Automatically, from Luma.** Every "Add An Event" button sends people to the All Tech Is Human calendar on Luma (https://luma.com/AllTechIsHuman). There, the **Submit Event** button lets them create a new event, submit an existing Luma event, or submit an external one (Eventbrite, etc.). Once the calendar's admins accept it, it appears here within about an hour. No API key is needed:
+**1. Automatically, from Luma.** Every "Add An Event" button opens `add.html`, which asks where the event lives and sends people to the right place on the All Tech Is Human calendar on Luma (https://luma.com/AllTechIsHuman):
+- **A new Luma event:** goes straight to Luma's create page, already set to submit to the ATIH calendar.
+- **An existing Luma event, or a non-Luma event (Eventbrite, etc.):** opens the ATIH calendar on Luma, with a picture of which **Submit Event** menu item to choose. Luma has no direct link to those two options.
+
+Once the calendar's admins accept an event, it appears here within about an hour. No API key is needed:
 
 - `.github/workflows/sync-luma.yml` runs `scripts/sync_luma.py` every hour on GitHub.
 - The script reads the Luma calendar's public event list and keeps only events that physically take place in one of our communities:
-  - with map coordinates: within 40 km of the community's center (the DC area, including Arlington and Bethesda; the Philadelphia area, including King of Prussia);
-  - with a hidden, guests-only address: the city and state must match exactly (Washington, DC or Philadelphia, PA).
+  - **DC (DMV):** Washington, DC, plus the suburban Maryland and Northern Virginia cities listed in `data/events.json`, or anywhere within 50 km of central DC (Baltimore is just outside).
+  - **Philadelphia:** Philadelphia, PA, or anywhere within 40 km of Center City (including King of Prussia).
+  - City names must match the state too, so Arlington, TX doesn't count.
 - Online events and events anywhere else are skipped, whatever their title says. You can change the centers, the radius and the place names in each community's `luma` block in `data/events.json`.
 - It adds new events, refreshes ones that changed on Luma, removes ones taken down on Luma, then rebuilds the site files and publishes.
 - To run it right away, go to the repo's **Actions** tab → **Sync events from Luma** → **Run workflow**.
