@@ -26,7 +26,7 @@ END:STANDARD
 END:VTIMEZONE
 BEGIN:VEVENT
 UID:luma-oab1kyzg@atihx-community-calendar
-DTSTAMP:20261013T170305Z
+DTSTAMP:20261013T171622Z
 DTSTART;TZID=America/New_York:20260427T173000
 DTEND;TZID=America/New_York:20260427T193000
 SUMMARY:All Tech Is Human's Responsible Tech Mixer: Washington\, DC · ATIH
@@ -40,7 +40,7 @@ URL:https://luma.com/oab1kyzg
 END:VEVENT
 BEGIN:VEVENT
 UID:luma-ubp5408a@atihx-community-calendar
-DTSTAMP:20261013T170305Z
+DTSTAMP:20261013T171622Z
 DTSTART;TZID=America/New_York:20260817T180000
 DTEND;TZID=America/New_York:20260817T200000
 SUMMARY:ATIHx DC: Responsible Tech Happy Hour · ATIHx DC
@@ -54,7 +54,7 @@ URL:https://luma.com/ubp5408a
 END:VEVENT
 BEGIN:VEVENT
 UID:luma-g5n0jr1i@atihx-community-calendar
-DTSTAMP:20261013T170305Z
+DTSTAMP:20261013T171622Z
 DTSTART;TZID=America/New_York:20260820T190000
 DTEND;TZID=America/New_York:20260820T210000
 SUMMARY:ATIHx Philadelphia: America's 250th & the Future of Responsible Tec
@@ -70,7 +70,7 @@ URL:https://luma.com/g5n0jr1i
 END:VEVENT
 BEGIN:VEVENT
 UID:igf-usa-2026@atihx-community-calendar
-DTSTAMP:20261013T170305Z
+DTSTAMP:20261013T171622Z
 DTSTART;TZID=America/New_York:20260909T103000
 DTEND;TZID=America/New_York:20260909T170000
 SUMMARY:IGF-USA 2026 · ATIHx Philly
@@ -83,7 +83,7 @@ URL:https://www.surveymonkey.com/r/6CTT7GC
 END:VEVENT
 BEGIN:VEVENT
 UID:luma-cso4v1ie@atihx-community-calendar
-DTSTAMP:20261013T170305Z
+DTSTAMP:20261013T171622Z
 DTSTART;TZID=America/New_York:20260910T180000
 DTEND;TZID=America/New_York:20260910T200000
 SUMMARY:HackAI Philly · ATIHx Philly
@@ -93,5 +93,268 @@ DESCRIPTION:Hosted by Hack AI with PostHog\n\nFood and networking\, a short
  hacking session to work on AI projects. Open to technical and non-technica
  l people interested in AI.\n\nhttps://luma.com/cso4v1ie
 URL:https://luma.com/cso4v1ie
+END:VEVENT
+BEGIN:VEVENT
+UID:politico-decoded-dc-2026@atihx-community-calendar
+DTSTAMP:20261013T171622Z
+DTSTART;TZID=America/New_York:20260916T090000
+DTEND;TZID=America/New_York:20260916T130000
+SUMMARY:POLITICO Decoded Summit: Washington\, D.C. · ATIHx DC
+LOCATION:POLITICO Decoded Summit\, Washington\, DC
+DESCRIPTION:Hosted by POLITICO\n\nA new POLITICO summit bringing policymake
+ rs\, regulators\, industry leaders and investors together on AI and tech p
+ olicy\, from regulation and national security to infrastructure and global
+  competition. Program begins at 9:00 a.m. ET\; see the event page for the 
+ venue and full schedule.\n\nhttps://www.politico.com/events/2026/09/16/pol
+ itico-decoded-summit-washington-d-c-00001649
+URL:https://www.politico.com/events/2026/09/16/politico-decoded-summit-wash
+ ington-d-c-00001649
+END:VEVENT
+BEGIN:VEVENT
+UID:georgetown-fritz-forum-2026@atihx-community-calendar
+DTSTAMP:20261013T171622Z
+DTSTART;TZID=America/New_York:20260917T163000
+DTEND;TZID=America/New_York:20260917T183000
+SUMMARY:Fritz Digital Ethics Forum: Social Media\, Children\, and the Const
+ itution · ATIHx DC
+LOCATION:Riggs Library\, Healy Hall\, Georgetown University\, 37th and O St
+ reets NW\, Washington\, DC 20057
+DESCRIPTION:Hosted by Georgetown University Center for Digital Ethics\n\nTh
+ e inaugural Fritz Digital Ethics Forum examines social media\, children an
+ d the Constitution. A reception follows the program.\n\nhttps://events.geo
+ rgetown.edu/digital-ethics/event/cde-fritz-forum-social-media-children
+URL:https://events.georgetown.edu/digital-ethics/event/cde-fritz-forum-soci
+ al-media-children
+END:VEVENT
+BEGIN:VEVENT
+UID:georgetown-governance-stack-2026-09-18@atihx-community-calendar
+DTSTAMP:20261013T171622Z
+DTSTART;TZID=America/New_York:20260918T090000
+DTEND;TZID=America/New_York:20260918T170000
+SUMMARY:Redesigning the Governance Stack: Taking Stock and Moving Forward (
+ Day 1) · ATIHx DC
+LOCATION:Georgetown Law Tech Institute\, 500 First St NW\, 9th Floor\, Wash
+ ington\, DC 20001
+DESCRIPTION:Hosted by Georgetown Law Institute for Technology Law & Policy\
+ n\nDay 1 of a two-day public symposium where the project's authors and inv
+ ited experts review its findings and discuss the future of administrative 
+ governance of the information economy. Continues September 19. RSVP reques
+ ted by September 16.\n\nhttps://www.law.georgetown.edu/tech-institute/news
+ /the-redesigning-the-governance-stack-project-taking-stock-and-moving-forw
+ ard/
+URL:https://www.law.georgetown.edu/tech-institute/news/the-redesigning-the-
+ governance-stack-project-taking-stock-and-moving-forward/
+END:VEVENT
+BEGIN:VEVENT
+UID:georgetown-governance-stack-2026-09-19@atihx-community-calendar
+DTSTAMP:20261013T171622Z
+DTSTART;TZID=America/New_York:20260919T090000
+DTEND;TZID=America/New_York:20260919T170000
+SUMMARY:Redesigning the Governance Stack: Taking Stock and Moving Forward (
+ Day 2) · ATIHx DC
+LOCATION:Georgetown Law Tech Institute\, 500 First St NW\, 9th Floor\, Wash
+ ington\, DC 20001
+DESCRIPTION:Hosted by Georgetown Law Institute for Technology Law & Policy\
+ n\nDay 2 of the public symposium on the Redesigning the Governance Stack P
+ roject\, looking ahead to future directions for governing the information 
+ economy.\n\nhttps://www.law.georgetown.edu/tech-institute/programs-and-ini
+ tiatives/redesigning-the-governance-stack-project/
+URL:https://www.law.georgetown.edu/tech-institute/programs-and-initiatives/
+ redesigning-the-governance-stack-project/
+END:VEVENT
+BEGIN:VEVENT
+UID:luma-ngo0tpyj@atihx-community-calendar
+DTSTAMP:20261013T171622Z
+DTSTART;TZID=America/New_York:20260921T180000
+DTEND;TZID=America/New_York:20260921T200000
+SUMMARY:ATIHx DC: Responsible Tech Happy Hour · ATIHx DC
+LOCATION:Teaism Penn Quarter\, 400 8th St NW\, Washington\, DC 20004
+DESCRIPTION:Hosted by ATIHx DC (Manas Khatore)\n\nAn informal\, independent
+ ly organized happy hour to talk about improving the responsible tech field
+ : responsible AI\, tech policy\, trust & safety\, youth and wellbeing\, an
+ d cyber and democracy. Attendees are asked to make a purchase at the venue
+ .\n\nhttps://luma.com/ngo0tpyj
+URL:https://luma.com/ngo0tpyj
+END:VEVENT
+BEGIN:VEVENT
+UID:luma-BucksCountyUSAinDC@atihx-community-calendar
+DTSTAMP:20261013T171622Z
+DTSTART;TZID=America/New_York:20260924T183000
+DTEND;TZID=America/New_York:20260924T203000
+SUMMARY:DC Screening of BUCKS COUNTY\, USA · ATIHx DC
+LOCATION:NCTA – The Internet & Television Association\, 25 Massachusetts 
+ Ave NW\, Suite 100\, Washington\, DC 20001
+DESCRIPTION:Hosted by MovieGoer\, WETA\, With Honor and Bucks County\, USA\
+ n\nA reception\, a 30-minute preview of the documentary series about two f
+ riends from politically opposed families in a Pennsylvania community\, and
+  a discussion moderated by PBS NewsHour's Judy Woodruff.\n\nhttps://luma.c
+ om/BucksCountyUSAinDC
+URL:https://luma.com/BucksCountyUSAinDC
+END:VEVENT
+BEGIN:VEVENT
+UID:multilingual-democracy-ai-2026@atihx-community-calendar
+DTSTAMP:20261013T171622Z
+DTSTART;TZID=America/New_York:20260928T090000
+DTEND;TZID=America/New_York:20260928T140000
+SUMMARY:Impacts of AI on Multilingual and Multiracial Democracy · ATIHx DC
+LOCATION:The George Washington University Law School\, 2000 H St NW\, Washi
+ ngton\, DC 20052
+DESCRIPTION:Hosted by Multiracial Democracy Project\n\nA half-day convening
+  on the practical challenges multilingual AI raises and how technology and
+  policy can support fairer language access.\n\nhttps://www.eventbrite.com/
+ e/impacts-of-ai-on-multilingual-and-multiracial-democracy-tickets-19970589
+ 27010
+URL:https://www.eventbrite.com/e/impacts-of-ai-on-multilingual-and-multirac
+ ial-democracy-tickets-1997058927010
+END:VEVENT
+BEGIN:VEVENT
+UID:your-attention-please-screening-2026@atihx-community-calendar
+DTSTAMP:20261013T171622Z
+DTSTART;TZID=America/New_York:20260929T173000
+DTEND;TZID=America/New_York:20260929T193000
+SUMMARY:Advance Screening: Your Attention Please · ATIHx DC
+LOCATION:Cleveland Park Library\, 3310 Connecticut Ave NW\, Washington\, DC
+  20008
+DESCRIPTION:Hosted by Screenwise Families DC & Schools Beyond Screens DC\n\
+ nAn advance screening of a film about how the competition for attention on
+  digital platforms shapes children's lives\, with ideas for how families c
+ an reclaim focus.\n\nhttps://www.eventbrite.com/e/join-us-for-an-advance-s
+ creening-of-your-attention-please-tickets-2001258866141
+URL:https://www.eventbrite.com/e/join-us-for-an-advance-screening-of-your-a
+ ttention-please-tickets-2001258866141
+END:VEVENT
+BEGIN:VEVENT
+UID:ai-red-teaming-workshop-2026@atihx-community-calendar
+DTSTAMP:20261013T171622Z
+DTSTART;TZID=America/New_York:20261003T130000
+DTEND;TZID=America/New_York:20261003T150000
+SUMMARY:AI Red Teaming Workshop · ATIHx DC
+LOCATION:Bookhill Gallery\, 1610 Wisconsin Ave NW\, Washington\, DC 20007
+DESCRIPTION:Hosted by Respect The Tech\n\nA hands-on session on how AI syst
+ ems are tested for weaknesses\, misuse and unsafe behavior.\n\nhttps://www
+ .eventbrite.com/e/ai-red-teaming-workshop-tickets-2001303197738
+URL:https://www.eventbrite.com/e/ai-red-teaming-workshop-tickets-2001303197
+ 738
+END:VEVENT
+BEGIN:VEVENT
+UID:dcpl-breaking-up-with-big-tech-2026@atihx-community-calendar
+DTSTAMP:20261013T171622Z
+DTSTART;TZID=America/New_York:20261005T173000
+DTEND;TZID=America/New_York:20261005T190000
+SUMMARY:Breaking Up with Big Tech (a club to help you through it) · ATIHx 
+ DC
+LOCATION:MLK Jr. Memorial Library\, Room 401-F\, 901 G St NW\, Washington\,
+  DC 20001
+DESCRIPTION:Hosted by DC Public Library\n\nFirst session of a weekly club f
+ or making small\, values-aligned changes to everyday tech\, like password 
+ managers and alternative search\, email and cloud tools. Later sessions me
+ et virtually over lunch\, and the final one is back at MLK Library.\n\nhtt
+ ps://dclibrary.libnet.info/event/17350179
+URL:https://dclibrary.libnet.info/event/17350179
+END:VEVENT
+BEGIN:VEVENT
+UID:luma-398nwqca@atihx-community-calendar
+DTSTAMP:20261013T171622Z
+DTSTART;TZID=America/New_York:20261005T173000
+DTEND;TZID=America/New_York:20261005T203000
+SUMMARY:Human Friendly Tech Mixer · ATIHx DC
+LOCATION:Crimson Whiskey Bar\, 627 H St NW\, Washington\, DC 20001
+DESCRIPTION:Hosted by David Sandson\n\nAn informal\, no-host rooftop mixer 
+ for people working in digital tech\, AI\, tech policy\, privacy\, data sec
+ urity and governance across industry\, academia and civil society. Food an
+ d drinks are available for purchase.\n\nhttps://luma.com/398nwqca
+URL:https://luma.com/398nwqca
+END:VEVENT
+BEGIN:VEVENT
+UID:georgetown-life-after-data-2026@atihx-community-calendar
+DTSTAMP:20261013T171622Z
+DTSTART;TZID=America/New_York:20261006T090000
+DTEND;TZID=America/New_York:20261006T170000
+SUMMARY:Life After Data: The Conference on De-Datafication · ATIHx DC
+LOCATION:Georgetown Law Center\, 600 New Jersey Ave NW\, Washington\, DC 20
+ 001
+DESCRIPTION:Hosted by Center on Privacy & Technology at Georgetown Law\n\nA
+  free\, day-long public conference on how society might move past a world 
+ where personal data is the main source of value. Sessions are recorded but
+  not live-streamed\; see the program for exact times.\n\nhttps://www.law.g
+ eorgetown.edu/privacy-technology-center/education/life-after-data-the-conf
+ erence-on-de-datafication/
+URL:https://www.law.georgetown.edu/privacy-technology-center/education/life
+ -after-data-the-conference-on-de-datafication/
+END:VEVENT
+BEGIN:VEVENT
+UID:luma-uhngu7f1@atihx-community-calendar
+DTSTAMP:20261013T171622Z
+DTSTART;TZID=America/New_York:20261008T173000
+DTEND;TZID=America/New_York:20261008T190000
+SUMMARY:Book Talk with Katie Harbath: Disrupting Politics · ATIHx DC
+LOCATION:Open Gov Hub\, 1100 13th St NW\, Suite 800\, Washington\, DC 20005
+DESCRIPTION:Hosted by Development Gateway: An IREX Venture\n\nFormer platfo
+ rm policy executive Katie Harbath discusses her book on how tech companies
+  have shaped elections and what AI may change next\, moderated by Developm
+ ent Gateway's Beverley Hatcher-Mbu.\n\nhttps://luma.com/uhngu7f1
+URL:https://luma.com/uhngu7f1
+END:VEVENT
+BEGIN:VEVENT
+UID:luma-e2wrhp46@atihx-community-calendar
+DTSTAMP:20261013T171622Z
+DTSTART;TZID=America/New_York:20261019T180000
+DTEND;TZID=America/New_York:20261019T200000
+SUMMARY:ATIHx DC: Responsible Tech Happy Hour · ATIHx DC
+LOCATION:Teaism Penn Quarter\, 400 8th St NW\, Washington\, DC 20004
+DESCRIPTION:Hosted by ATIHx DC (Manas Khatore)\n\nAn informal\, independent
+ ly organized happy hour to talk about improving the responsible tech field
+ : responsible AI\, tech policy\, trust & safety and more. Registration req
+ uires host approval\; attendees are asked to make a purchase at the venue.
+ \n\nhttps://luma.com/e2wrhp46
+URL:https://luma.com/e2wrhp46
+END:VEVENT
+BEGIN:VEVENT
+UID:luma-allianceoktoberfest@atihx-community-calendar
+DTSTAMP:20261013T171622Z
+DTSTART;TZID=America/New_York:20261020T180000
+DTEND;TZID=America/New_York:20261020T200000
+SUMMARY:The Alliance After Hours: Oktoberfest Edition · ATIHx DC
+LOCATION:Alliance for Secure AI rooftop\, 20 F St NW\, Washington\, DC 2000
+ 1
+DESCRIPTION:Hosted by The Alliance for Secure AI\n\nA fall rooftop happy ho
+ ur with drinks and hors d'oeuvres\, centered on the future of AI security 
+ in America and networking with leaders\, builders and policy folks.\n\nhtt
+ ps://luma.com/allianceoktoberfest
+URL:https://luma.com/allianceoktoberfest
+END:VEVENT
+BEGIN:VEVENT
+UID:trust-in-media-deepfakes-2026@atihx-community-calendar
+DTSTAMP:20261013T171622Z
+DTSTART;TZID=America/New_York:20261028T120000
+DTEND;TZID=America/New_York:20261028T130000
+SUMMARY:Deepfakes + Disinformation: Navigating the New Frontlines of Crisis
+  Response · ATIHx DC
+LOCATION:Online (Riverside webinar)
+DESCRIPTION:Hosted by Trust in Media Cooperative\n\nA Trust Dialogue webina
+ r with Edelman's Dave Fleet on how brands and communications teams are pre
+ paring for crises driven by false narratives and AI-generated content.\n\n
+ https://riverside.com/webinar/registration/eyJldmVudElkIjoiNmFjNTQ5NmFiNjB
+ hZWRjNmIzMWI2OGY4Iiwic2x1ZyI6InRydXN0LWluLW1lZGlhLWNvb3BlcmF0aXZlcy1zdHVka
+ W8ifQ==
+URL:https://riverside.com/webinar/registration/eyJldmVudElkIjoiNmFjNTQ5NmFi
+ NjBhZWRjNmIzMWI2OGY4Iiwic2x1ZyI6InRydXN0LWluLW1lZGlhLWNvb3BlcmF0aXZlcy1zdH
+ VkaW8ifQ==
+END:VEVENT
+BEGIN:VEVENT
+UID:georgetown-danah-boyd-2026@atihx-community-calendar
+DTSTAMP:20261013T171622Z
+DTSTART;TZID=America/New_York:20261028T160000
+DTEND;TZID=America/New_York:20261028T173000
+SUMMARY:Book Talk with danah boyd: Data Are Made\, Not Found · ATIHx DC
+LOCATION:Georgetown University\, 37th and O Streets NW\, Washington\, DC 20
+ 057
+DESCRIPTION:Hosted by Georgetown University Center for Digital Ethics\n\nda
+ nah boyd discusses her new book on the politics and power behind US Census
+  data and the civil servants who protected it.\n\nhttps://events.georgetow
+ n.edu/digital-ethics/event/42121-book-talk-georgetown-10-28-26-danah-boyd-
+ data
+URL:https://events.georgetown.edu/digital-ethics/event/42121-book-talk-geor
+ getown-10-28-26-danah-boyd-data
 END:VEVENT
 END:VCALENDAR

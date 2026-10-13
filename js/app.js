@@ -59,7 +59,8 @@
 
   // Months you can page through: every month with events, plus the current month.
   var monthIndex = function (iso) { return Number(iso.slice(0, 4)) * 12 + Number(iso.slice(5, 7)) - 1; };
-  var MIN_INDEX = TODAY_INDEX, MAX_INDEX = TODAY_INDEX;
+  // Always allow paging a couple of months ahead, even before events are posted.
+  var MIN_INDEX = TODAY_INDEX, MAX_INDEX = TODAY_INDEX + 2;
   EVENTS.forEach(function (e) {
     var k = monthIndex(e.start);
     if (k < MIN_INDEX) MIN_INDEX = k;
