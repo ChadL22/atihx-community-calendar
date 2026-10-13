@@ -240,20 +240,29 @@ a.chip:hover { text-decoration: underline; }
   background: var(--white); font-size: 17px; font-weight: 500;
 }
 .tabs button[aria-selected="true"] { border-bottom-color: var(--coral); font-weight: 700; }
-.event { display: flex; gap: 16px; padding: 16px 22px; border-bottom: 1px solid var(--line-soft); }
+.event { display: flex; gap: 14px; padding: 10px 22px 11px; border-bottom: 1px solid var(--line-soft); transition: background-color .15s; }
 .event:last-child { border-bottom: 0; }
-.event-date { flex: none; width: 52px; display: flex; flex-direction: column; align-items: center; line-height: 1.1; }
-.event-date .mon { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; color: var(--ink); }
-.event-date .day { font-family: var(--serif); font-size: 28px; font-weight: 700; }
-.event-date .dow { font-size: 12px; color: var(--ink); }
-.event-body { min-width: 0; display: flex; flex-direction: column; gap: 5px; }
-.event-title { font-size: 17px; font-weight: 700; line-height: 1.3; }
-a.event-title:hover { text-decoration: underline; }
-.event-meta { font-size: 15px; color: var(--ink); }
-.event-link { align-self: flex-start; font-size: 15px; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+.event.has-link { cursor: pointer; }
+@media (hover: hover) {
+  .event.has-link:hover { background: var(--weekend-bg); }
+  .event.has-link:hover .event-title { text-decoration: underline; text-underline-offset: 3px; }
+}
+.event-date { flex: none; width: 44px; display: flex; flex-direction: column; align-items: center; line-height: 1.1; }
+.event-date .mon { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; color: var(--ink); }
+.event-date .day { font-family: var(--serif); font-size: 24px; font-weight: 700; }
+.event-date .dow { font-size: 11px; color: var(--ink); }
+.event-body { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.event-title {
+  font-size: 16px; font-weight: 700; line-height: 1.3;
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;
+}
+.event-meta { font-size: 14px; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.event-actions { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 2px; }
+.btn.btn-xs { min-height: 0; padding: 3px 12px; font-size: 13px; font-weight: 700; border-width: 1.5px; gap: 4px; background: var(--white); }
+.btn.btn-xs:hover { background: var(--black); color: var(--white); }
 .badge {
-  display: inline-block; padding: 3px 12px; border-radius: 300px;
-  color: var(--black); font-size: 13px; font-weight: 700;
+  display: inline-block; padding: 2px 10px; border-radius: 300px;
+  color: var(--black); font-size: 12px; font-weight: 700;
 }
 .list-empty { padding: 32px 22px; text-align: center; font-size: 16px; color: var(--ink); }
 .list-range { margin: 0; padding: 10px 22px; border-bottom: 1px solid var(--line-soft); font-size: 13px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #555; }
@@ -267,7 +276,7 @@ a.event-title:hover { text-decoration: underline; }
     radial-gradient(farthest-side at 50% 100%, rgba(0,0,0,0.14), transparent) bottom / 100% 12px no-repeat scroll;
 }
 #event-list:focus-visible { outline-offset: -3px; }
-.events-foot { padding: 16px 22px; border-top: var(--border); font-size: 15px; color: var(--ink); }
+.events-foot { padding: 14px 22px; border-top: var(--border); font-size: 15px; color: var(--ink); }
 
 /* ---------- Submit page ---------- */
 .submit-layout { display: flex; flex-wrap: wrap; gap: 40px 64px; align-items: flex-start; }

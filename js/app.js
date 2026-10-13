@@ -173,34 +173,50 @@
     var html = list.map(function (e) {
       var c = BY_ID[e.community];
       var d = new Date(Number(e.start.slice(0, 4)), Number(e.start.slice(5, 7)) - 1, Number(e.start.slice(8, 10)));
-      var title = e.url
-        ? '<a class="event-title" href="' + esc(e.url) + '" target="_blank" rel="noopener">' + esc(e.title) + '</a>'
-        : '<div class="event-title">' + esc(e.title) + '</div>';
       var where = e.venue || 'Venue TBA';
-      return '<article class="event">' +
+      var full = e.title + '\n' + timeRange(e) + ' · ' + where + (e.host ? '\nHosted by ' + e.host : '');
+      return '<article class="event' + (e.url ? ' has-link' : '') + '"' + (e.url ? ' data-url="' + esc(e.url) + '"' : '') + ' title="' + esc(full) + '">' +
         '<div class="event-date"><span class="mon">' + MON[d.getMonth()] + '</span><span class="day">' + d.getDate() + '</span><span class="dow">' + DOW[d.getDay()] + '</span></div>' +
-        '<div class="event-body">' + title +
+        '<div class="event-body">' +
+        '<div class="event-title">' + esc(e.title) + '</div>' +
         '<div class="event-meta">' + esc(timeRange(e)) + ' · ' + esc(where) + '</div>' +
-        (e.host ? '<div class="event-meta">Hosted by ' + esc(e.host) + '</div>' : '') +
-        (e.url ? '<a class="event-link" href="' + esc(e.url) + '" target="_blank" rel="noopener">' + (e.start.slice(0, 10) >= TODAY ? 'Details &amp; RSVP ↗' : 'Event page ↗') + '<span class="sr-only"> for ' + esc(e.title) + ' (opens in a new tab)</span></a>' : '') +
-        '<div><span class="badge" style="background:' + esc(c.color) + '">' + esc(c.name) + '</span></div>' +
+        '<div class="event-actions">' +
+        '<span class="badge" style="background:' + esc(c.color) + '">' + esc(c.short || c.name) + '</span>' +
+        (e.url ? '<a class="btn btn-outline btn-xs" href="' + esc(e.url) + '" target="_blank" rel="noopener">View event ↗<span class="sr-only"> page for ' + esc(e.title) + ' (opens in a new tab)</span></a>' : '') +
+        '</div>' +
         '</div></article>';
     }).join('');
     box.innerHTML = html;
     fitList();
   }
 
-  // Show the first few events, then let the list scroll.
+  // Show the first 5 events (4 if 5 would make the list taller than the
+  // calendar beside it), then let the list scroll.
   function fitList() {
     var box = $('event-list');
     var items = box.querySelectorAll('.event');
     box.classList.remove('is-scrollable');
     box.style.maxHeight = '';
-    if (items.length <= VISIBLE_EVENTS) return;
-    var last = items[VISIBLE_EVENTS - 1];
-    box.style.maxHeight = (last.offsetTop - box.offsetTop + last.offsetHeight) + 'px';
+    var bottomOf = function (n) { var el = items[n - 1]; return el.offsetTop - box.offsetTop + el.offsetHeight; };
+    var n = Math.min(VISIBLE_EVENTS, items.length);
+    var cal = document.querySelector('.calendar'), panel = box.closest('.events');
+    var sideBySide = cal && Math.abs(cal.getBoundingClientRect().top - panel.getBoundingClientRect().top) < 2;
+    if (sideBySide && n === VISIBLE_EVENTS && items.length > n) {
+      var chrome = panel.offsetHeight - box.offsetHeight;   // tabs, range line, footer
+      if (chrome + bottomOf(n) > cal.offsetHeight + 40) n = VISIBLE_EVENTS - 1;
+    }
+    if (items.length <= n) return;
+    box.style.maxHeight = bottomOf(n) + 'px';
     box.classList.add('is-scrollable');
   }
+
+  // Clicking anywhere on an event opens its event page, same as the button.
+  $('event-list').addEventListener('click', function (e) {
+    if (e.target.closest('a')) return;
+    if (window.getSelection && String(window.getSelection())) return; // let people select text
+    var row = e.target.closest('.event[data-url]');
+    if (row) window.open(row.getAttribute('data-url'), '_blank', 'noopener');
+  });
   var resizeTimer;
   window.addEventListener('resize', function () { clearTimeout(resizeTimer); resizeTimer = setTimeout(fitList, 150); });
 
