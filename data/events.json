@@ -392,7 +392,8 @@
       "host": "ATIHx DC (Manas Khatore)",
       "url": "https://luma.com/e2wrhp46",
       "description": "An informal, independently organized happy hour to talk about improving the responsible tech field: responsible AI, tech policy, trust & safety and more. Registration requires host approval; attendees are asked to make a purchase at the venue.",
-      "source": "luma"
+      "source": "luma",
+      "synced": true
     },
     {
       "id": "luma-allianceoktoberfest",
